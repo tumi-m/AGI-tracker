@@ -13,6 +13,7 @@
     --ink:#1b1a17; --ink2:#605e57; --ink3:#96938a;
     --line:#e2e0d8; --line2:#cfcdc4;
     --accent:#e05205; --accent-text:#b13f00;
+    --teal:#0f8a6e; --indigo:#5b52d6;
     --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
     --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
     --w:1120px;
@@ -50,8 +51,8 @@
   /* equation */
   .eq{display:grid;grid-template-columns:auto auto 1fr;gap:0 18px;align-items:baseline;margin:8px 0 48px}
   .eq .word{font-size:clamp(26px,4.4vw,46px);font-weight:200;letter-spacing:-.01em;white-space:nowrap}
-  .eq .op{font-size:clamp(22px,3.6vw,38px);font-weight:200;color:var(--ink3)}
-  @media(max-width:880px){.eq{grid-template-columns:1fr;gap:2px}.eq .op{display:none}.eq .word::before{content:attr(data-op) " ";color:var(--ink3)}}
+  .eq .op{font-size:clamp(22px,3.6vw,38px);font-weight:200;color:var(--ink3);margin:0 .3em}
+  @media(max-width:880px){.eq{grid-template-columns:1fr;gap:2px}.eq .op{display:none}.eq .word{white-space:normal}.eq .word::before{content:attr(data-op) " ";color:var(--ink3)}}
   .terms{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
   @media(max-width:880px){.terms{grid-template-columns:1fr}}
   .term{padding:28px 28px 32px;border-top:1px solid var(--ink)}
@@ -64,9 +65,11 @@
   .term .big small{font-size:13px;color:var(--ink2);font-weight:400;letter-spacing:0}
   .term .big.roll{font-size:clamp(16px,1.7vw,20px);white-space:nowrap}
   .term .big.roll small{display:block;margin-top:2px}
-  .meter{height:3px;background:var(--line);margin:18px 0 14px;position:relative;overflow:hidden}
-  .meter i{position:absolute;inset:0 auto 0 0;width:0;background:var(--ink);transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
-  .meter.hot i{background:var(--accent)}
+  .spark{margin:18px 0 12px}
+  .spark svg{display:block;width:100%;height:64px;overflow:visible}
+  .spk-l{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .spk-cap{font-family:var(--mono);font-size:10px;fill:var(--ink3);letter-spacing:.06em}
+  .spk-end{font-family:var(--mono);font-size:11.5px;font-weight:600}
   .term p{font-size:13.5px;color:var(--ink2);line-height:1.6}
   .term p b{color:var(--ink);font-weight:600}
 
@@ -94,6 +97,24 @@
   .readout b.hot{color:var(--accent-text)}
   .readout span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
   .fine{margin-top:28px;font-size:12px;color:var(--ink3);max-width:76ch;line-height:1.7}
+
+  /* signals charts */
+  .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+  .sig{min-width:0}
+  @media(max-width:960px){.sig-grid{grid-template-columns:1fr}}
+  .sig h3{font-size:16px;font-weight:600;margin-bottom:4px}
+  .sig .sg-sub{font-size:13px;color:var(--ink2);margin-bottom:20px;max-width:52ch}
+  .sig .sg-box{overflow-x:auto}
+  .sig .sg-box svg{width:100%;min-width:420px;height:300px;display:block;overflow:visible}
+  .sg-gl{stroke:var(--line);stroke-width:1}
+  .sg-lb{fill:var(--ink3);font-size:11px;font-family:var(--mono)}
+  .sg-line{fill:none;stroke-width:2;stroke-linejoin:round}
+  .sg-pt{stroke:var(--paper);stroke-width:2;cursor:pointer}
+  .sg-name{font-size:11px;font-family:var(--mono);fill:var(--ink2)}
+  .sg-key{display:flex;gap:22px;margin-top:14px;flex-wrap:wrap}
+  .sg-key span{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2)}
+  .sg-key i{width:12px;height:2.5px;border-radius:2px}
+  .sig .fine{margin-top:16px}
 
   /* library */
   .lib{display:grid;grid-template-columns:repeat(3,1fr);gap:64px}
@@ -144,8 +165,9 @@
     <nav aria-label="Sections">
       <a href="./" class="hm">Clock</a>
       <a href="resources.html" aria-current="page">Resources</a>
+      <a href="./#widget">Widget</a>
       <a href="./#embed" class="hm">Embed</a>
-      <a href="data/forecasts.json">Data</a>
+      <a href="data/forecasts.json" class="hm">Data</a>
     </nav>
   </div>
 </header>
@@ -164,7 +186,7 @@
 
     <div class="eq" aria-label="Economy equals debt plus productivity plus demographics">
       <span class="word">ECONOMY</span><span class="op">=</span>
-      <span class="word" style="grid-column:1" data-op="=">DEBT&nbsp;&nbsp;<span class="op">+</span>&nbsp;&nbsp;PRODUCTIVITY&nbsp;&nbsp;<span class="op">+</span>&nbsp;&nbsp;DEMOGRAPHICS</span>
+      <span class="word" style="grid-column:1" data-op="=">DEBT <span class="op">+</span> PRODUCTIVITY <span class="op">+</span> DEMOGRAPHICS</span>
     </div>
 
     <div class="terms">
@@ -172,21 +194,21 @@
         <h3>Debt</h3>
         <p class="state">Lever spent</p>
         <p class="big mono roll">$<span id="debt">324,000,000,000,000</span> <small>global, still counting</small></p>
-        <div class="meter"><i data-fill="93%"></i></div>
+        <div class="spark" id="spDebt" aria-label="Global debt as a share of world GDP, 2000 to 2026, rising from about 230 to about 340 percent"></div>
         <p>Borrowing pulls tomorrow's growth into today. At roughly <b>three times world GDP</b>, the developed world has already pulled hard. This number ticks up about ten trillion dollars a year.</p>
       </div>
       <div class="term">
         <h3>Productivity</h3>
         <p class="state hot">The open variable</p>
         <p class="big mono">~1.5% <small>per year, two decades</small></p>
-        <div class="meter hot"><i data-fill="18%"></i></div>
+        <div class="spark" id="spProd" aria-label="Trailing productivity growth, 2000 to 2026, falling from about 2.9 to about 1.6 percent a year"></div>
         <p>Output per hour of work — the only term that compounds without a bill. It has crawled since 2005. <b>AGI is the largest claim ever made about this number</b>, which is why its date is the most important date in finance.</p>
       </div>
       <div class="term">
         <h3>Demographics</h3>
         <p class="state">Reversing</p>
         <p class="big mono">2015 <small>peak working-age share, adv. economies</small></p>
-        <div class="meter"><i data-fill="38%"></i></div>
+        <div class="spark" id="spDemo" aria-label="Working-age share of population in advanced economies, 1990 to 2026, peaking around 2015 then declining"></div>
         <p>Fewer workers, more retirees, fertility below replacement across the OECD and China. For the first time in the industrial era, <b>this term subtracts</b>.</p>
       </div>
     </div>
@@ -207,6 +229,31 @@
         <div><b id="roGap">+2.4</b><span>Extra 2026-economies created</span></div>
       </div>
       <p class="fine">Stylized illustration, not a forecast: baseline compounds at 3% a year; the scenario ramps growth from 3% to 10% over the four years after the AGI date, then holds. The point is not the exact path — it is that a moved productivity term dwarfs every other input, and repriced assets follow. Forecast dates come from the sources on the <a href="./">clock</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section id="signals">
+  <div class="wrap">
+    <h2>The signals <span>— two charts, one direction</span></h2>
+    <p class="lede">Neither chart says AGI arrives on schedule. Both say the same thing: <b>the inputs keep growing and the estimates keep shrinking.</b></p>
+    <div class="sig-grid">
+      <div class="sig">
+        <h3>Training compute, frontier models</h3>
+        <p class="sg-sub">A billionfold increase in thirteen years — a doubling roughly every six months. Log scale: each gridline is 100× the one below.</p>
+        <div class="sg-box" id="chCompute"></div>
+        <p class="fine">Approximate public estimates of total training compute (FLOP), after Epoch AI. Points are representative frontier systems, not a complete census.</p>
+      </div>
+      <div class="sig">
+        <h3>The forecast keeps moving closer</h3>
+        <p class="sg-sub">Every time the question is asked, the answer is sooner. Predicted AGI year, by the year the prediction was made.</p>
+        <div class="sg-box" id="chDrift"></div>
+        <div class="sg-key" aria-hidden="true">
+          <span><i style="background:var(--accent)"></i>Metaculus community median</span>
+          <span><i style="background:var(--teal)"></i>AI-researcher surveys</span>
+        </div>
+        <p class="fine">Approximate historical medians: Metaculus question 5121 over time; AI Impacts expert surveys (50% chance of high-level machine intelligence). The dashed line is this site's median today.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -373,14 +420,138 @@ function debtTick(){
 }
 debtTick(); setInterval(debtTick, 100);
 
-/* meters fill when scrolled into view */
-const io = new IntersectionObserver(es => es.forEach(e => {
-  if(e.isIntersecting){
-    e.target.querySelectorAll(".meter i").forEach(i => { i.style.width = i.dataset.fill; });
-    io.unobserve(e.target);
+/* ---- term-card sparklines: real series behind each word ---- */
+/* approximate, widely reported series — see footer note */
+const SPARKS = [
+  {el:"spDebt", color:"var(--indigo)", end:"338%", cap:"debt / world GDP · 2000–26",
+   pts:[[2000,230],[2004,246],[2008,278],[2012,305],[2016,325],[2020,356],[2023,333],[2026,338]]},
+  {el:"spProd", color:"var(--accent)", end:"1.6%", cap:"productivity growth · 2000–26",
+   pts:[[2000,2.9],[2005,2.8],[2010,2.4],[2015,1.3],[2020,1.4],[2026,1.6]]},
+  {el:"spDemo", color:"var(--teal)", end:"peak '15", cap:"working-age share · 1990–2026",
+   pts:[[1990,66.1],[2000,66.9],[2010,67.4],[2015,67.5],[2020,66.6],[2026,65.3]], mark:2015}
+];
+function drawSpark(cfg){
+  const el = $(cfg.el); if(!el) return;
+  const W = 260, H = 64, P = 4, LW = 54; /* label width reserved right */
+  const xs = cfg.pts.map(p=>p[0]), ys = cfg.pts.map(p=>p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const lo = Math.min(...ys), hi = Math.max(...ys), pad = (hi-lo)*.15 || 1;
+  const X = v => P + (W-P*2-LW) * (v-x0)/(x1-x0);
+  const Y = v => P + (H-P*2-12) * (1 - (v-lo+pad)/(hi-lo+pad*2));
+  const d = cfg.pts.map((p,i)=>(i?"L":"M")+X(p[0]).toFixed(1)+" "+Y(p[1]).toFixed(1)).join(" ");
+  const last = cfg.pts[cfg.pts.length-1];
+  let s = `<svg viewBox="0 0 ${W} ${H}" aria-hidden="true">`;
+  s += `<line x1="${P}" y1="${H-13}" x2="${W-LW}" y2="${H-13}" stroke="var(--line)" stroke-width="1"/>`;
+  s += `<path class="spk-l" d="${d}" stroke="${cfg.color}"/>`;
+  if(cfg.mark != null){
+    const mp = cfg.pts.find(p=>p[0]===cfg.mark);
+    s += `<circle cx="${X(mp[0])}" cy="${Y(mp[1])}" r="4" fill="none" stroke="${cfg.color}" stroke-width="1.5"/>`;
   }
-}), {threshold:.3});
-io.observe(document.querySelector(".terms"));
+  s += `<circle cx="${X(last[0])}" cy="${Y(last[1])}" r="3" fill="${cfg.color}"/>`;
+  s += `<text class="spk-end" x="${X(last[0])+8}" y="${Y(last[1])+4}" fill="var(--ink)">${cfg.end}</text>`;
+  s += `<text class="spk-cap" x="${P}" y="${H-1}">${cfg.cap}</text>`;
+  s += `</svg>`;
+  el.innerHTML = s;
+}
+SPARKS.forEach(drawSpark);
+
+/* ---- signals chart 1: frontier training compute (log scale) ---- */
+const COMPUTE = [
+  {y:2012.5, e:17.7, n:"AlexNet"},
+  {y:2017.5, e:18.9, n:"Transformer"},
+  {y:2019.1, e:21.2, n:"GPT-2"},
+  {y:2020.4, e:23.5, n:"GPT-3"},
+  {y:2022.3, e:24.4, n:"PaLM"},
+  {y:2023.2, e:25.3, n:"GPT-4"},
+  {y:2024.5, e:25.6, n:"Llama 3.1"},
+  {y:2025.7, e:26.6, n:"2025 frontier"}
+];
+function buildCompute(){
+  const W = 520, H = 300, PL = 46, PR = 86, PT = 14, PB = 30;
+  const X = y => PL + (W-PL-PR) * (y-2012)/(2026.5-2012);
+  const Y = e => PT + (H-PT-PB) * (1 - (e-17)/(27-17));
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Training compute of frontier AI models, 2012 to 2025, log scale from ten to the seventeen to ten to the twenty-six FLOP">`;
+  for(let e=18; e<=26; e+=2){
+    s += `<line class="sg-gl" x1="${PL}" y1="${Y(e)}" x2="${W-PR}" y2="${Y(e)}"/>`;
+    s += `<text class="sg-lb" x="${PL-6}" y="${Y(e)+4}" text-anchor="end">10<tspan dy="-5" font-size="8.5">${e}</tspan></text>`;
+  }
+  for(let y=2012; y<=2026; y+=4)
+    s += `<text class="sg-lb" x="${X(y)}" y="${H-8}" text-anchor="middle">${y}</text>`;
+  const d = COMPUTE.map((p,i)=>(i?"L":"M")+X(p.y).toFixed(1)+" "+Y(p.e).toFixed(1)).join(" ");
+  s += `<path class="sg-line" d="${d}" stroke="var(--accent)"/>`;
+  COMPUTE.forEach((p,i) => {
+    s += `<circle class="sg-pt" data-i="${i}" cx="${X(p.y)}" cy="${Y(p.e)}" r="4.5" fill="var(--accent)"/>`;
+    if(["AlexNet","GPT-2","GPT-3","GPT-4","2025 frontier"].includes(p.n)){
+      const above = p.n !== "AlexNet";
+      s += `<text class="sg-name" x="${X(p.y)+(p.n==="2025 frontier"?8:0)}" y="${Y(p.e)+(above?-10:16)}" text-anchor="${p.n==="2025 frontier"?"start":"middle"}">${p.n}</text>`;
+    }
+  });
+  s += `</svg>`;
+  $("chCompute").innerHTML = s;
+  hoverPts($("chCompute"), i => {
+    const p = COMPUTE[i];
+    return `<b>${p.n}</b> · ~${Math.floor(p.y)} · 10<sup>${p.e.toFixed(1)}</sup> FLOP`;
+  });
+}
+
+/* ---- signals chart 2: predicted AGI year, by year asked ---- */
+const MET = [ /* Metaculus q5121 community median over time (approx) */
+  {x:2020.5, y:2052},{x:2021.5, y:2045},{x:2022.9, y:2040},
+  {x:2023.3, y:2032},{x:2024.2, y:2031},{x:2025.2, y:2032},{x:2026.5, y:2033}
+];
+const SURV = [ /* AI Impacts researcher surveys, 50% HLMI (approx) */
+  {x:2016.5, y:2061},{x:2022.5, y:2060},{x:2023.8, y:2047}
+];
+function buildDrift(){
+  const W = 520, H = 300, PL = 46, PR = 20, PT = 14, PB = 30;
+  const X = x => PL + (W-PL-PR) * (x-2015.5)/(2027-2015.5);
+  const Y = y => PT + (H-PT-PB) * (1 - (y-2028)/(2066-2028));
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Predicted AGI year by year the prediction was made, 2016 to 2026 — estimates fall from around 2060 to the early 2030s">`;
+  for(let y=2030; y<=2060; y+=10){
+    s += `<line class="sg-gl" x1="${PL}" y1="${Y(y)}" x2="${W-PR}" y2="${Y(y)}"/>`;
+    s += `<text class="sg-lb" x="${PL-6}" y="${Y(y)+4}" text-anchor="end">${y}</text>`;
+  }
+  for(let x=2016; x<=2026; x+=2)
+    s += `<text class="sg-lb" x="${X(x)}" y="${H-8}" text-anchor="middle">${x}</text>`;
+  const line = (arr,color,cls) => {
+    const d = arr.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p.y).toFixed(1)).join(" ");
+    let t = `<path class="sg-line" d="${d}" stroke="${color}"/>`;
+    arr.forEach((p,i) => { t += `<circle class="sg-pt" data-set="${cls}" data-i="${i}" cx="${X(p.x)}" cy="${Y(p.y)}" r="4.5" fill="${color}"/>`; });
+    return t;
+  };
+  /* this site's median today */
+  s += `<line x1="${PL}" y1="${Y(2029.5)}" x2="${W-PR}" y2="${Y(2029.5)}" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 4"/>`;
+  s += `<text class="sg-lb" x="${PL+4}" y="${Y(2029.5)+14}" fill="var(--ink2)">this clock today · 2029</text>`;
+  s += line(SURV, "var(--teal)", "s");
+  s += line(MET, "var(--accent)", "m");
+  s += `<text class="sg-name" x="${X(2021.4)}" y="${Y(2061)-10}">researchers, surveyed</text>`;
+  s += `<text class="sg-name" x="${X(2016.2)}" y="${Y(2049)}">forecasting community</text>`;
+  s += `</svg>`;
+  $("chDrift").innerHTML = s;
+  hoverPts($("chDrift"), (i, el) => {
+    const p = el.dataset.set === "s" ? SURV[i] : MET[i];
+    const who = el.dataset.set === "s" ? "Researcher survey" : "Metaculus median";
+    return `<b>${who}</b> · asked ~${Math.floor(p.x)} · answer: ${p.y}`;
+  });
+}
+
+function hoverPts(box, html){
+  const tip = $("tip");
+  box.querySelectorAll(".sg-pt").forEach(pt => {
+    pt.addEventListener("mousemove", e => {
+      tip.innerHTML = html(+pt.dataset.i, pt);
+      tip.style.left = Math.min(e.clientX + 12, innerWidth - 280) + "px";
+      tip.style.top = (e.clientY + 16) + "px";
+      tip.classList.add("show");
+    });
+    pt.addEventListener("mouseleave", () => tip.classList.remove("show"));
+  });
+}
+buildCompute(); buildDrift();
+
+/* service worker (shared app shell with the clock) */
+if("serviceWorker" in navigator && (location.protocol === "https:" || ["localhost","127.0.0.1"].includes(location.hostname)))
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
 
 /* ---- scenario chart ---- */
 const Y0 = 2026, Y1 = 2046, YEARS = [];

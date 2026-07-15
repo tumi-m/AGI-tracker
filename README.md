@@ -8,9 +8,13 @@ Built for developers, engineers, AI researchers and enthusiasts: minimal, dark, 
 
 | File | Purpose |
 |---|---|
-| `index.html` | The canonical clock. Master countdown, live board of all ten sources, divergence timeline, primary-source signal cards, integration docs. Fully self-contained — no build, no external requests. |
+| `index.html` | The canonical clock. Six switchable clock views (seer / split-flap / LED / HUD / dial / grammaton), forecast table with expandable sources, divergence timeline, widget & install section, integration docs. Fully self-contained — no build, no external requests. |
+| `resources.html` | Context page: Economy = Debt + Productivity + Demographics with live counters and sparklines, scenario chart, compute & forecast-drift charts, curated free library. |
 | `embed.html` | Embeddable clock. Parameterized via query string (see below). |
 | `widget.js` | Script embed — renders inline and inherits the host page's font. |
+| `manifest.webmanifest` + `sw.js` + `icons/` | PWA layer: installable on phone / tablet / desktop, offline app shell. |
+| `widgets/tiresias-widget.js` | Scriptable script — a real iOS home-screen widget without an app store listing. |
+| `extension/` + `downloads/tiresias-extension.zip` | MV3 browser extension: days-remaining badge on the toolbar. Load unpacked; no permissions beyond an alarm. |
 | `data/forecasts.json` | The canonical dataset: every forecast with claim, kind, primary-source links, verification stamp and revision history. Edits happen via PR, which is the audit trail. |
 
 ## Run it

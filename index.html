@@ -9,6 +9,8 @@
 <meta property="og:description" content="The median of named expert forecasts and prediction markets, counting down. Embeddable anywhere.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#f5f4f0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f5f4f0'/%3E%3Ccircle cx='32' cy='23' r='12' fill='%231b1a17'/%3E%3Cpath d='M18 31 C18 45 23 54 32 58 C41 54 46 45 46 31 C42 36 37 38.5 32 38.5 C27 38.5 22 36 18 31 Z' fill='%231b1a17'/%3E%3C/svg%3E">
 <style>
   :root{
@@ -17,8 +19,10 @@
     --line:#e2e0d8; --line2:#cfcdc4;
     --accent:#e05205;        /* marks, large numerals only */
     --accent-text:#b13f00;   /* small text, >=4.5:1 on paper */
+    --teal:#0f8a6e; --indigo:#5b52d6;
     --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
     --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --serif:"Didot","Bodoni MT","Hoefler Text",Georgia,serif;
     --w:1120px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -37,27 +41,30 @@
   :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
   /* header */
-  header{border-bottom:1px solid var(--line)}
+  header{border-bottom:1px solid var(--line);position:relative;z-index:2;background:var(--paper)}
   .h-in{display:flex;align-items:center;justify-content:space-between;height:64px}
   .brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:600;letter-spacing:.22em;font-size:14px}
   .brand svg{display:block}
   nav{display:flex;gap:28px}
   nav a{text-decoration:none;font-size:13px;letter-spacing:.06em;color:var(--ink2)}
   nav a:hover{color:var(--ink)}
-  @media(max-width:640px){nav{gap:16px} nav a.hm{display:none}}
+  @media(max-width:640px){nav{gap:14px} nav a.hm{display:none}}
 
-  /* hero */
-  .hero{padding:72px 0 64px;border-bottom:1px solid var(--line)}
+  /* hero + neural canvas */
+  .hero{padding:64px 0 56px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  #net{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .hero .wrap{position:relative}
   .hero-grid{display:grid;grid-template-columns:1fr 264px;gap:64px;align-items:end}
   @media(max-width:880px){.hero-grid{grid-template-columns:1fr;gap:48px}}
-  .days{
-    font-size:clamp(96px,17vw,232px);font-weight:200;line-height:.95;
-    letter-spacing:-.035em;margin:16px 0 8px;font-variant-numeric:tabular-nums;
+  .facts{display:flex;flex-direction:column}
+  .facts div{
+    display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-top:1px solid var(--line);
   }
-  .sub{font-family:var(--mono);font-size:15px;color:var(--ink2);font-variant-numeric:tabular-nums}
-  .sub b{color:var(--ink);font-weight:500}
-  .expired-note{font-size:15px;color:var(--ink2);max-width:420px;margin-top:8px}
-  .pick{margin-top:40px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .facts div:last-child{border-bottom:1px solid var(--line)}
+  .facts dt{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+  .facts dd{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+  .pick{margin-top:36px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
   select{
     appearance:none;-webkit-appearance:none;background:transparent;
     border:none;border-bottom:1px solid var(--ink);border-radius:0;
@@ -67,19 +74,111 @@
     max-width:100%;
   }
   select:hover{border-bottom-color:var(--accent)}
-  .facts{display:flex;flex-direction:column}
-  .facts div{
-    display:flex;justify-content:space-between;align-items:baseline;gap:16px;
-    padding:11px 0;border-top:1px solid var(--line);
+  .viewbar{margin-top:18px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+  .views{display:flex;flex-wrap:wrap;border:1px solid var(--line2);width:fit-content;background:var(--paper)}
+  .vbtn{background:none;border:none;padding:7px 13px;font:500 11px var(--mono);letter-spacing:.12em;color:var(--ink2);transition:.12s}
+  .vbtn + .vbtn{border-left:1px solid var(--line)}
+  .hero-grid > div{min-width:0}
+  @media(max-width:640px){.vbtn{padding:6px 8px;font-size:10px;letter-spacing:.08em}}
+  .vbtn:hover{color:var(--ink)}
+  .vbtn[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+  /* clock stage — shared */
+  #stage{min-height:290px;display:flex;flex-direction:column;justify-content:flex-end}
+  .days{
+    font-size:clamp(96px,17vw,232px);font-weight:200;line-height:.95;
+    letter-spacing:-.035em;margin:16px 0 8px;font-variant-numeric:tabular-nums;
   }
-  .facts div:last-child{border-bottom:1px solid var(--line)}
-  .facts dt{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
-  .facts dd{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+  .sub{font-family:var(--mono);font-size:15px;color:var(--ink2);font-variant-numeric:tabular-nums}
+  .sub b{color:var(--ink);font-weight:500}
+
+  /* mode: flap (split-flap departure board) */
+  .flap{background:#23221e;border-radius:12px;padding:34px 36px;color:#efede4;box-shadow:0 18px 44px rgba(27,26,23,.18)}
+  .flap .fl-cap{font:500 11px var(--mono);letter-spacing:.3em;color:#a8a498;margin-bottom:20px}
+  .tile{
+    display:inline-block;background:#131210;color:#f4f2ea;border-radius:.1em;
+    font:600 clamp(44px,7vw,84px)/1.22 var(--mono);padding:.06em .16em;margin-right:.07em;
+    position:relative;overflow:hidden;font-variant-numeric:tabular-nums;
+  }
+  .tile::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(0,0,0,.65)}
+  .tile.small{font-size:clamp(19px,2.4vw,28px)}
+  .tile.tick{animation:flip .3s ease-out}
+  @keyframes flip{0%{transform:rotateX(-88deg)}100%{transform:rotateX(0)}}
+  .fl-time{margin-top:20px;display:flex;gap:22px;align-items:baseline;flex-wrap:wrap}
+  .fl-time .cap{color:#7d7a70;letter-spacing:.22em;margin-right:2px}
+
+  /* mode: led (digital alarm clock) */
+  .led{background:#0d0c0b;border-radius:14px;padding:32px 36px 28px;border:1px solid #262320;box-shadow:0 18px 44px rgba(27,26,23,.2)}
+  .led .ld-cap{font:500 10px var(--mono);letter-spacing:.34em;color:#7e2a1c;margin-bottom:16px}
+  .led svg{display:block;width:100%;max-width:560px;height:auto;filter:drop-shadow(0 0 7px rgba(255,45,30,.45))}
+  .led .seg{fill:#ff2d1e}
+  .led .off{fill:#ff2d1e;fill-opacity:.06}
+  .led .ld-sub{margin-top:14px;font:500 11px var(--mono);letter-spacing:.2em;color:#6e2318}
+
+  /* mode: hud (a certain red-eyed endoskeleton) */
+  .hud{
+    position:relative;background:#0b0505;border-radius:10px;padding:38px 40px 30px;
+    color:#ff3b30;font-family:var(--mono);overflow:hidden;box-shadow:0 18px 44px rgba(27,26,23,.2);
+  }
+  .hud::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,rgba(255,59,48,.05) 0 1px,transparent 1px 3px);
+  }
+  .hud .cb{position:absolute;width:22px;height:22px;border:2px solid rgba(255,59,48,.7)}
+  .hud .cb.tl{top:10px;left:10px;border-right:0;border-bottom:0}
+  .hud .cb.tr{top:10px;right:10px;border-left:0;border-bottom:0}
+  .hud .cb.bl{bottom:10px;left:10px;border-right:0;border-top:0}
+  .hud .cb.br{bottom:10px;right:10px;border-left:0;border-top:0}
+  .hud .hd-l1{font-size:11px;letter-spacing:.26em;color:rgba(255,59,48,.75)}
+  .hud .hd-days{
+    font-size:clamp(72px,11vw,148px);font-weight:600;line-height:1.05;letter-spacing:-.01em;
+    text-shadow:0 0 18px rgba(255,59,48,.55);font-variant-numeric:tabular-nums;
+  }
+  .hud .hd-row{display:flex;gap:14px;margin:14px 0 18px;flex-wrap:wrap}
+  .hud .hd-cell{border:1px solid rgba(255,59,48,.45);padding:8px 14px;font-size:15px;font-variant-numeric:tabular-nums}
+  .hud .hd-cell i{font-style:normal;display:block;font-size:9px;letter-spacing:.24em;color:rgba(255,59,48,.6)}
+  .hud .hd-tel{font-size:10.5px;letter-spacing:.14em;line-height:1.9;color:rgba(255,59,48,.62)}
+  @keyframes hudflk{0%,91%,94%,100%{opacity:1}92%{opacity:.86}93%{opacity:.96}}
+  .hud.flk{animation:hudflk 7s steps(1) infinite}
+
+  /* mode: dial (host diagnostics) */
+  .dial{
+    background:#fdfcf8;border:1px solid var(--line);border-radius:12px;padding:30px;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 14px 36px rgba(27,26,23,.07);
+  }
+  .dial svg{display:block;width:min(340px,78vw);height:auto}
+  .dial .dl-num{font-family:var(--serif);font-weight:400;letter-spacing:-.01em}
+  .dial .dl-cap{font:500 8.5px var(--sans);letter-spacing:.34em;fill:var(--ink2)}
+  .dial .dl-quote{font-family:var(--serif);font-style:italic;font-size:10.5px;fill:var(--ink3)}
+  .spin{transform-origin:170px 170px;animation:spin 80s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* mode: gram (sense offense) */
+  .gram{
+    position:relative;background:#101011;border-radius:8px;padding:44px 40px;color:#eceae4;overflow:hidden;
+    box-shadow:0 18px 44px rgba(27,26,23,.2);
+  }
+  .gram::before,.gram::after{content:"";position:absolute;background:rgba(236,234,228,.13)}
+  .gram::before{left:50%;top:0;bottom:0;width:1px}
+  .gram::after{top:50%;left:0;right:0;height:1px}
+  .gram .gm-cap{text-align:center;font-size:10px;letter-spacing:.42em;color:#8d8b84;margin-bottom:30px;text-transform:uppercase}
+  .gram .gm-grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media(max-width:640px){.gram .gm-grid{grid-template-columns:repeat(2,1fr)}}
+  .gram .gm-cell{border:1px solid rgba(236,234,228,.5);padding:18px 8px 14px;text-align:center}
+  .gram .gm-cell b{display:block;font:600 clamp(30px,4.6vw,52px)/1 var(--sans);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .gram .gm-cell i{font-style:normal;display:block;margin-top:10px;font-size:9px;letter-spacing:.4em;color:#8d8b84}
+  .gram .gm-foot{text-align:center;margin-top:28px;font-size:9.5px;letter-spacing:.3em;color:#5f5d57;text-transform:uppercase}
 
   /* sections */
   section{padding:64px 0;border-bottom:1px solid var(--line)}
-  h2{font-size:14px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:32px}
+  h2{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:32px}
   h2 span{color:var(--ink3);font-weight:500}
+  .h2i{flex:none;width:17px;height:17px;stroke-width:1.6;fill:none;stroke:currentColor}
+  #timeline .h2i{color:var(--teal)}
+  #forecasts .h2i{color:var(--indigo)}
+  #widget .h2i{color:var(--accent-text)}
+  #embed .h2i{color:var(--teal)}
+  #method .h2i{color:var(--ink2)}
 
   /* timeline */
   .tlbox{overflow-x:auto}
@@ -108,32 +207,41 @@
   .tip b{font-weight:600}
   .tip .mono{display:block;color:var(--ink2);font-size:11.5px}
 
-  /* table */
-  table{width:100%;border-collapse:collapse}
-  th{
-    text-align:left;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--ink2);font-weight:500;padding:0 12px 10px;border-bottom:1px solid var(--ink);
+  /* forecasts — grid rows with 3D hover */
+  .fhead{display:grid;grid-template-columns:minmax(170px,1.35fr) 100px 106px 84px 86px 24px;gap:0 14px;
+    padding:0 14px 10px;border-bottom:1px solid var(--ink)}
+  .fhead span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:500}
+  .fhead .r{text-align:right}
+  .fitem{perspective:1100px}
+  .frow{
+    display:block;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--line);
+    padding:15px 14px 14px;position:relative;transform-style:preserve-3d;
+    transition:transform .22s ease,box-shadow .22s ease,background .22s ease;
+    --mx:50%;--my:50%;
   }
-  th.r,td.r{text-align:right}
-  tbody tr.row{cursor:pointer}
-  tbody tr.row:hover td{background:var(--card)}
-  td{padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:baseline}
-  td:first-child,th:first-child{padding-left:0}
-  td:last-child,th:last-child{padding-right:0}
-  .t-name{font-weight:600;font-size:15px;white-space:nowrap}
-  .t-name .sel-mark{color:var(--accent-text);margin-right:8px;font-family:var(--mono)}
-  .t-aff{color:var(--ink2);font-size:12.5px}
-  .t-kind{color:var(--ink2);font-size:13px}
-  .t-date,.t-days,.t-delta{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .t-delta{color:var(--ink2)}
-  .t-days b{font-weight:600}
-  .t-more{font-family:var(--mono);color:var(--ink3);font-size:13px;width:24px;text-align:right}
-  tr.row[aria-expanded="true"] .t-more{color:var(--ink)}
-  tr.det>td{padding:0 12px 22px;border-bottom:1px solid var(--line);background:var(--card)}
-  tr.det[hidden]{display:none}
-  .det-in{padding-top:18px;max-width:720px}
-  .det-claim{font-size:14.5px;color:var(--ink);margin-bottom:6px}
+  .frow:hover{
+    background:
+      radial-gradient(260px circle at var(--mx) var(--my),rgba(224,82,5,.055),transparent 62%),
+      var(--card);
+    box-shadow:0 16px 34px -12px rgba(27,26,23,.22);
+    z-index:2;
+  }
+  .fr-grid{display:grid;grid-template-columns:minmax(170px,1.35fr) 100px 106px 84px 86px 24px;gap:0 14px;align-items:baseline}
+  .fc-name{font-weight:600;font-size:15px;white-space:nowrap}
+  .fc-name .sel-mark{color:var(--accent-text);margin-right:7px;font-family:var(--mono)}
+  .fc-aff{display:block;color:var(--ink2);font-size:12.5px;font-weight:400}
+  .fc-kind{color:var(--ink2);font-size:13px}
+  .fc-date,.fc-days,.fc-delta{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+  .fc-delta{color:var(--ink2)}
+  .fc-days b{font-weight:600}
+  .fc-more{font-family:var(--mono);color:var(--ink3);font-size:14px;text-align:right}
+  .frow[aria-expanded="true"] .fc-more{color:var(--ink)}
+  .fc-claim{margin-top:8px;font-size:13px;color:var(--ink2);max-width:74ch;line-height:1.55}
+  .fdet{border-bottom:1px solid var(--line);background:var(--card);padding:20px 14px 24px}
+  .fdet[hidden]{display:none}
+  .det-in{max-width:720px}
   .det-asi{font-size:13px;color:var(--accent-text);margin-bottom:12px}
+  .det-ver{font-family:var(--mono);font-size:11.5px;color:var(--ink3);margin-bottom:14px;letter-spacing:.04em}
   .det-links{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
   .det-links a{font-size:14px;width:fit-content}
   .det-links em{font-style:normal;color:var(--ink3);font-size:12px;margin-left:8px}
@@ -145,13 +253,36 @@
   .det-use[disabled]{border-color:var(--line2);color:var(--ink3);cursor:default}
   .det-use[disabled]:hover{background:none;color:var(--ink3)}
   @media(max-width:760px){
+    .fhead{grid-template-columns:minmax(96px,1.3fr) 88px 60px 18px;gap:0 8px}
+    .fr-grid{grid-template-columns:minmax(96px,1.3fr) 88px 60px 18px;gap:0 8px}
+    .fc-name{white-space:normal}
     .hide-s{display:none}
-    td,th{padding-left:8px;padding-right:8px}
   }
   .tbl-note{margin-top:20px;font-size:12.5px;color:var(--ink3);max-width:640px}
 
+  /* widget section */
+  .wg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
+  @media(max-width:880px){.wg-grid{grid-template-columns:1fr}}
+  .wg{padding:26px 28px 30px;border-top:1px solid var(--ink)}
+  .wg-grid .wg:nth-child(even){border-left:1px solid var(--line)}
+  @media(max-width:880px){.wg-grid .wg:nth-child(even){border-left:0}}
+  .wg h3{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
+  .wg h3 .h2i{width:15px;height:15px;color:var(--ink2)}
+  .wg .wg-plat{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink3);margin-bottom:12px}
+  .wg p{font-size:13.5px;color:var(--ink2);line-height:1.6;max-width:52ch}
+  .wg ol{margin:10px 0 0 18px;font-size:13px;color:var(--ink2);line-height:1.8}
+  .wg .wbtn{
+    display:inline-block;margin-top:16px;background:none;border:1px solid var(--ink);
+    padding:8px 16px;font-size:13px;font-weight:500;letter-spacing:.04em;transition:.12s;
+    text-decoration:none;color:var(--ink);
+  }
+  .wg .wbtn:hover{background:var(--ink);color:var(--paper)}
+  .wg .wnote{margin-top:10px;font-size:12px;color:var(--ink3)}
+  .wg code{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+
   /* embed */
   .em-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px 64px}
+  .em{min-width:0}
   @media(max-width:880px){.em-grid{grid-template-columns:1fr}}
   .em h3{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
   .em p{font-size:13.5px;color:var(--ink2);margin-bottom:14px;max-width:52ch}
@@ -186,6 +317,11 @@
   .f-links a{text-decoration:none;font-size:13px;color:var(--ink2)}
   .f-links a:hover{color:var(--ink)}
   .f-small{font-size:12px;color:var(--ink3);max-width:76ch;line-height:1.7}
+
+  @media(prefers-reduced-motion:reduce){
+    .tile.tick,.hud.flk,.spin{animation:none}
+    .frow{transition:none}
+  }
 </style>
 </head>
 <body>
@@ -196,6 +332,15 @@
       <circle cx="32" cy="23" r="12"/>
       <path d="M18 31 C18 45 23 54 32 58 C41 54 46 45 46 31 C42 36 37 38.5 32 38.5 C27 38.5 22 36 18 31 Z"/>
     </g>
+    <g id="ic-sig"><path d="M1 9h3l2.5-6 3 12 2.5-6h4"/></g>
+    <g id="ic-net"><circle cx="3.5" cy="8.5" r="2"/><circle cx="13.5" cy="3.5" r="2"/><circle cx="13.5" cy="13.5" r="2"/><path d="M5.3 7.6l6.4-3.2M5.3 9.4l6.4 3.2"/></g>
+    <g id="ic-grid"><rect x="1.5" y="1.5" width="5.6" height="5.6"/><rect x="9.9" y="1.5" width="5.6" height="5.6"/><rect x="1.5" y="9.9" width="5.6" height="5.6"/><rect x="9.9" y="9.9" width="5.6" height="5.6"/></g>
+    <g id="ic-code"><path d="M5.5 4L2 8.5 5.5 13M11.5 4L15 8.5 11.5 13"/></g>
+    <g id="ic-eye"><path d="M1.5 8.5C3.5 5 6 3.2 8.5 3.2S13.5 5 15.5 8.5c-2 3.5-4.5 5.3-7 5.3s-5-1.8-7-5.3z"/><circle cx="8.5" cy="8.5" r="2.2"/></g>
+    <g id="ic-clock"><circle cx="8.5" cy="8.5" r="7"/><path d="M8.5 4.5v4l3 2"/></g>
+    <g id="ic-pin"><rect x="2" y="2" width="13" height="9" rx="1"/><path d="M5.5 14.5h6M8.5 11v3.5"/></g>
+    <g id="ic-phone"><rect x="4.5" y="1.5" width="8" height="14" rx="1.6"/><path d="M7.5 13h2"/></g>
+    <g id="ic-puzzle"><path d="M2 6h3.4a1.8 1.8 0 113.2 0H12v3.4a1.8 1.8 0 100 3.2V16H2z" transform="translate(1 -1)"/></g>
   </defs>
 </svg>
 
@@ -209,8 +354,9 @@
       <a href="#timeline" class="hm">Timeline</a>
       <a href="#forecasts">Forecasts</a>
       <a href="resources.html">Resources</a>
+      <a href="#widget">Widget</a>
       <a href="#embed" class="hm">Embed</a>
-      <a href="data/forecasts.json">Data</a>
+      <a href="data/forecasts.json" class="hm">Data</a>
     </nav>
   </div>
 </header>
@@ -218,14 +364,24 @@
 <main>
 
 <div class="hero">
+  <canvas id="net" aria-hidden="true"></canvas>
   <div class="wrap hero-grid">
     <div>
-      <p class="cap" id="heroLabel">Days until artificial general intelligence</p>
-      <p class="days mono" id="days" aria-live="off">&#8202;</p>
-      <p class="sub" id="sub"></p>
+      <div id="stage" data-mode="seer"></div>
       <div class="pick">
         <label class="cap" for="srcSel">Forecast</label>
         <select id="srcSel"></select>
+      </div>
+      <div class="viewbar">
+        <span class="cap" id="viewLbl">View</span>
+        <div class="views" role="group" aria-labelledby="viewLbl">
+          <button class="vbtn" data-v="seer" title="The house style">SEER</button>
+          <button class="vbtn" data-v="flap" title="Split-flap departure board">FLAP</button>
+          <button class="vbtn" data-v="led"  title="Digital alarm clock">LED</button>
+          <button class="vbtn" data-v="hud"  title="A certain red-eyed endoskeleton">HUD</button>
+          <button class="vbtn" data-v="dial" title="Host diagnostics">DIAL</button>
+          <button class="vbtn" data-v="gram" title="Sense offense">GRAM</button>
+        </div>
       </div>
     </div>
     <dl class="facts" id="facts" aria-label="Summary of tracked forecasts"></dl>
@@ -234,7 +390,7 @@
 
 <section id="timeline">
   <div class="wrap">
-    <h2>Timeline <span>— all forecasts, 2026 to 2037</span></h2>
+    <h2><svg class="h2i" viewBox="0 0 17 17" aria-hidden="true"><use href="#ic-sig"/></svg>Timeline <span>— all forecasts, 2026 to 2037</span></h2>
     <div class="tlbox" id="tlbox"></div>
     <div class="tlkey" aria-hidden="true">
       <span><i class="k-dot"></i>Forecast</span>
@@ -246,27 +402,71 @@
 
 <section id="forecasts">
   <div class="wrap">
-    <h2>Forecasts <span>— select a row for the claim and sources</span></h2>
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Source</th>
-          <th scope="col" class="hide-s">Basis</th>
-          <th scope="col" class="r">Target</th>
-          <th scope="col" class="r">Days</th>
-          <th scope="col" class="r hide-s">vs median</th>
-          <th scope="col"><span class="sr" hidden>Details</span></th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
+    <h2><svg class="h2i" viewBox="0 0 17 17" aria-hidden="true"><use href="#ic-net"/></svg>Forecasts <span>— select a row for sources and history</span></h2>
+    <div role="table" aria-label="All tracked forecasts">
+      <div class="fhead" role="row">
+        <span role="columnheader">Source</span>
+        <span role="columnheader" class="hide-s">Basis</span>
+        <span role="columnheader" class="r">Target</span>
+        <span role="columnheader" class="r">Days</span>
+        <span role="columnheader" class="r hide-s">vs median</span>
+        <span role="columnheader"></span>
+      </div>
+      <div id="tbody"></div>
+    </div>
     <p class="tbl-note">Dates are editorial interpretations of public statements and community medians, each linked to its primary source. A passed date stays on the board — history will judge.</p>
+  </div>
+</section>
+
+<section id="widget">
+  <div class="wrap">
+    <h2><svg class="h2i" viewBox="0 0 17 17" aria-hidden="true"><use href="#ic-grid"/></svg>Widget <span>— the clock on every screen, no app store</span></h2>
+    <div class="wg-grid">
+      <div class="wg">
+        <h3><svg class="h2i" viewBox="0 0 17 17" aria-hidden="true"><use href="#ic-phone"/></svg>Install as an app</h3>
+        <p class="wg-plat">PHONE · TABLET · DESKTOP</p>
+        <p>Tiresias is an installable web app. One tap puts the clock on your home screen or dock — full screen, offline, straight from the browser. No store, no account.</p>
+        <button class="wbtn" id="installBtn" hidden>Install Tiresias</button>
+        <p class="wnote" id="installNote">On iPhone / iPad: Share <span class="mono">→</span> Add to Home Screen. On Android and desktop Chrome or Edge: menu <span class="mono">→</span> Install app.</p>
+      </div>
+      <div class="wg">
+        <h3><svg class="h2i" viewBox="0 0 17 17" aria-hidden="true"><use href="#ic-pin"/></svg>Always-on-top mini clock</h3>
+        <p class="wg-plat">PC · MAC — CHROME, EDGE</p>
+        <p>Pop the countdown out into a tiny window that floats above every app — code editor, terminal, spreadsheet. The productivity hack: the deadline never leaves your screen.</p>
+        <button class="wbtn" id="pipBtn">Pop out mini clock</button>
+        <p class="wnote" id="pipNote">Uses the browser's picture-in-picture window. Falls back to a small popup where unsupported.</p>
+      </div>
+      <div class="wg">
+        <h3><svg class="h2i" viewBox="0 0 17 17" aria-hidden="true"><use href="#ic-clock"/></svg>iPhone home-screen widget</h3>
+        <p class="wg-plat">iOS · SCRIPTABLE</p>
+        <p>A real widget between your app icons, without an app store listing: the free Scriptable app runs a 30-line script that renders the count and refreshes itself hourly.</p>
+        <ol>
+          <li>Install <b>Scriptable</b> (free) from the App Store</li>
+          <li>Download the script below, open it in Scriptable</li>
+          <li>Add a Scriptable widget to your home screen and point it at <b>Tiresias</b></li>
+        </ol>
+        <a class="wbtn" href="widgets/tiresias-widget.js" download>Download widget script</a>
+        <p class="wnote">Lock-screen widgets and Dynamic Island need a native companion app — on the roadmap. Android: install the app above, then any launcher that pins websites as widgets works.</p>
+      </div>
+      <div class="wg">
+        <h3><svg class="h2i" viewBox="0 0 17 17" aria-hidden="true"><use href="#ic-puzzle"/></svg>Browser badge extension</h3>
+        <p class="wg-plat">CHROME · EDGE · BRAVE</p>
+        <p>The days-remaining count as a badge on your toolbar, updated hourly. No permissions beyond an alarm timer; the dataset ships inside, so it never phones home.</p>
+        <ol>
+          <li>Download and unzip the extension</li>
+          <li>Open <code>chrome://extensions</code>, enable Developer mode</li>
+          <li>Load unpacked <span class="mono">→</span> select the folder</li>
+        </ol>
+        <a class="wbtn" href="downloads/tiresias-extension.zip" download>Download extension</a>
+        <p class="wnote">Streamers and wallpaper engines: the <a href="#embed">transparent embed</a> drops into OBS or any web-wallpaper tool.</p>
+      </div>
+    </div>
   </div>
 </section>
 
 <section id="embed">
   <div class="wrap">
-    <h2>Embed <span>— free, no key, attribution is the payment</span></h2>
+    <h2><svg class="h2i" viewBox="0 0 17 17" aria-hidden="true"><use href="#ic-code"/></svg>Embed <span>— free, no key, attribution is the payment</span></h2>
     <div class="em-grid">
       <div class="em">
         <h3>iframe</h3>
@@ -302,7 +502,7 @@ const { forecasts } = await r.json();</pre></div>
 
 <section id="method">
   <div class="wrap method">
-    <h2>Method</h2>
+    <h2><svg class="h2i" viewBox="0 0 17 17" aria-hidden="true"><use href="#ic-eye"/></svg>Method</h2>
     <p>The headline number is the <b>median of ten tracked forecast dates</b> — lab CEOs, named researchers, forecasting communities and prediction markets — recomputed from the public dataset on every page load. Anyone can verify it in three lines of code.</p>
     <p>Every date links to a primary source and carries a verification stamp. When a forecaster revises, the old date is kept in the dataset's history — <b>revisions are the story</b>, not an embarrassment to hide.</p>
     <p>Definitions of AGI differ between sources, and each date is the midpoint of a wide distribution, not a promise. This site takes no position on who is right. <b>The disagreement is the point.</b></p>
@@ -323,6 +523,7 @@ const { forecasts } = await r.json();</pre></div>
       </div>
       <div class="f-links">
         <a href="#forecasts">Forecasts</a>
+        <a href="#widget">Widget</a>
         <a href="#embed">Embed</a>
         <a href="data/forecasts.json">Dataset</a>
       </div>
@@ -416,22 +617,202 @@ const srcName = id => (id||current)==="agg" ? "Median of 10 forecasts" : byId(id
 const dLeft = t => Math.floor((t - Date.now())/86400000);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt = t => new Date(t).toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* hero */
-function tick(){
+/* ---------- clock state ---------- */
+function calc(){
   const t = target(), diff = t - Date.now();
-  if(diff <= 0){
-    $("days").textContent = "0";
-    $("sub").innerHTML = `<b>${fmt(t)}</b> has passed — this forecast stays on the board.`;
-  } else {
-    const d = Math.floor(diff/86400000);
-    $("days").textContent = d.toLocaleString();
-    let r = diff % 86400000;
-    const h = String(Math.floor(r/3600000)).padStart(2,"0"); r %= 3600000;
-    const m = String(Math.floor(r/60000)).padStart(2,"0");  r %= 60000;
-    const s = String(Math.floor(r/1000)).padStart(2,"0");
-    $("sub").innerHTML = `to <b>${fmt(t)}</b> &nbsp;·&nbsp; ${h} h ${m} m ${s} s`;
+  const gone = diff <= 0, r = Math.max(diff, 0);
+  const d = Math.floor(r/86400000);
+  let x = r % 86400000;
+  const h = String(Math.floor(x/3600000)).padStart(2,"0"); x %= 3600000;
+  const m = String(Math.floor(x/60000)).padStart(2,"0");  x %= 60000;
+  const s = String(Math.floor(x/1000)).padStart(2,"0");
+  return {t, gone, d, h, m, s, d4: String(Math.min(d,9999)).padStart(4,"0")};
+}
+const labelTxt = () => current === "agg"
+  ? "Days until artificial general intelligence"
+  : "Days until AGI, per " + srcName();
+
+/* ---------- clock views ---------- */
+let view = "seer";
+
+/* seven-segment renderer for LED view */
+const SEGS = {
+  a:[12,0,36,10], b:[50,6,10,38], c:[50,56,10,38], d:[12,90,36,10],
+  e:[0,56,10,38], f:[0,6,10,38], g:[12,45,36,10]
+};
+const DIGMAP = ["abcdef","bc","abged","abgcd","fgbc","afgcd","afgcde","abc","abcdefg","abcdfg"];
+function segDigit(x, y, sc, idx){
+  let s = `<g class="dg" data-dg="${idx}" transform="translate(${x} ${y}) scale(${sc}) skewX(-4)">`;
+  for(const k of "abcdefg"){
+    const [rx,ry,rw,rh] = SEGS[k];
+    s += `<rect class="off" data-s="${k}" x="${rx}" y="${ry}" width="${rw}" height="${rh}" rx="3.5"/>`;
   }
+  return s + "</g>";
+}
+function segSet(root, idx, ch){
+  const g = root.querySelector(`[data-dg="${idx}"]`);
+  if(!g) return;
+  const lit = DIGMAP[+ch] || "";
+  g.querySelectorAll("rect").forEach(r => { r.setAttribute("class", lit.includes(r.dataset.s) ? "seg" : "off"); });
+}
+
+const VIEWS = {
+  seer:{
+    build: () => `
+      <p class="cap" data-t="label"></p>
+      <p class="days mono" id="days" aria-live="off">&#8202;</p>
+      <p class="sub" id="sub"></p>`,
+    update(st){
+      $("days").textContent = st.gone ? "0" : st.d.toLocaleString();
+      $("sub").innerHTML = st.gone
+        ? `<b>${fmt(st.t)}</b> has passed — this forecast stays on the board.`
+        : `to <b>${fmt(st.t)}</b> &nbsp;·&nbsp; ${st.h} h ${st.m} m ${st.s} s`;
+    }
+  },
+  flap:{
+    build: () => `
+      <div class="flap">
+        <p class="fl-cap"><span data-t="label"></span></p>
+        <div id="flapD" aria-hidden="true"></div>
+        <div class="fl-time">
+          <span><span class="cap">HRS</span> <span class="tile small" data-fl="h">00</span></span>
+          <span><span class="cap">MIN</span> <span class="tile small" data-fl="m">00</span></span>
+          <span><span class="cap">SEC</span> <span class="tile small" data-fl="s">00</span></span>
+        </div>
+      </div>`,
+    update(st){
+      const box = $("flapD");
+      if(box.children.length !== 4)
+        box.innerHTML = st.d4.split("").map(c => `<span class="tile">${c}</span>`).join("");
+      st.d4.split("").forEach((c,i) => {
+        const el = box.children[i];
+        if(el.textContent !== c){ el.textContent = c; el.classList.remove("tick"); void el.offsetWidth; el.classList.add("tick"); }
+      });
+      for(const [k,v] of [["h",st.h],["m",st.m],["s",st.s]]){
+        const el = document.querySelector(`[data-fl="${k}"]`);
+        if(el.textContent !== v){ el.textContent = v; el.classList.remove("tick"); void el.offsetWidth; el.classList.add("tick"); }
+      }
+    }
+  },
+  led:{
+    build(){
+      let dsvg = `<svg viewBox="0 0 560 150" role="img" aria-label="LED countdown">`;
+      for(let i=0;i<4;i++) dsvg += segDigit(14 + i*76, 8, 1, i);          /* days, big */
+      for(let i=0;i<2;i++) dsvg += segDigit(338 + i*40, 62, .48, 4+i);    /* HH */
+      dsvg += `<circle class="seg" data-b="1" cx="428" cy="82" r="4"/><circle class="seg" data-b="1" cx="428" cy="102" r="4"/>`;
+      for(let i=0;i<2;i++) dsvg += segDigit(442 + i*40, 62, .48, 6+i);    /* MM */
+      dsvg += `<text x="338" y="42" fill="#7e2a1c" font-family="var(--mono)" font-size="13" letter-spacing="4">DAYS</text>`;
+      dsvg += `</svg>`;
+      return `<div class="led"><p class="ld-cap">TIRESIAS · <span data-t="label"></span></p>${dsvg}
+        <p class="ld-sub" id="ldSec">SEC 00</p></div>`;
+    },
+    update(st){
+      const root = document.querySelector(".led svg");
+      st.d4.split("").forEach((c,i) => segSet(root, i, c));
+      segSet(root, 4, st.h[0]); segSet(root, 5, st.h[1]);
+      segSet(root, 6, st.m[0]); segSet(root, 7, st.m[1]);
+      const blink = (+st.s % 2) === 0 || reduceMotion ? 1 : .12;
+      root.querySelectorAll("[data-b]").forEach(c => c.setAttribute("fill-opacity", blink));
+      $("ldSec").textContent = "SEC " + st.s;
+    }
+  },
+  hud:{
+    build: () => `
+      <div class="hud ${reduceMotion ? "" : "flk"}">
+        <span class="cb tl"></span><span class="cb tr"></span><span class="cb bl"></span><span class="cb br"></span>
+        <p class="hd-l1">SCAN MODE // TARGET: GENERAL INTELLIGENCE</p>
+        <p class="hd-days"><span data-t="days">0</span></p>
+        <div class="hd-row">
+          <span class="hd-cell"><i>HRS</i><span data-t="h">00</span></span>
+          <span class="hd-cell"><i>MIN</i><span data-t="m">00</span></span>
+          <span class="hd-cell"><i>SEC</i><span data-t="s">00</span></span>
+        </div>
+        <p class="hd-tel">SOURCE: <span data-t="src"></span><br>ANALYSIS: TIMELINE DISPUTED · N=10 · MEDIAN RECOMPUTED AT LOAD<br>DIRECTIVE: OBSERVE. REPORT. DO NOT INTERVENE.</p>
+      </div>`,
+    update(){}
+  },
+  dial:{
+    build(){
+      const EPOCH = ts("2026-01-01");
+      const frac = Math.max(0, Math.min(1, (Date.now()-EPOCH) / (target()-EPOCH || 1)));
+      const R = 150, C = 170, r2 = 118;
+      const end = -Math.PI/2 + frac * Math.PI * 2;
+      const ex = C + r2 * Math.cos(end), ey = C + r2 * Math.sin(end);
+      const large = frac > .5 ? 1 : 0;
+      let ticks = "";
+      for(let i=0;i<60;i++){
+        const a = i * Math.PI/30, big = i % 5 === 0;
+        const rA = R - (big ? 10 : 5), rB = R;
+        ticks += `<line x1="${C+rA*Math.cos(a)}" y1="${C+rA*Math.sin(a)}" x2="${C+rB*Math.cos(a)}" y2="${C+rB*Math.sin(a)}" stroke="var(--ink3)" stroke-width="${big?1.2:.6}"/>`;
+      }
+      return `<div class="dial"><svg viewBox="0 0 340 372" role="img" aria-label="Dial countdown">
+        <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="var(--ink2)" stroke-width="1"/>
+        <circle class="${reduceMotion?"":"spin"}" cx="${C}" cy="${C}" r="134" fill="none" stroke="var(--line2)" stroke-width="1" stroke-dasharray="1 7"/>
+        ${ticks}
+        <circle cx="${C}" cy="${C}" r="${r2}" fill="none" stroke="var(--line)" stroke-width="1"/>
+        <path d="M ${C} ${C-r2} A ${r2} ${r2} 0 ${large} 1 ${ex.toFixed(1)} ${ey.toFixed(1)}" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+        <circle cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="4" fill="var(--accent)"/>
+        <text class="dl-num" x="${C}" y="${C+2}" text-anchor="middle" font-size="64" fill="var(--ink)"><tspan data-t="days">0</tspan></text>
+        <text class="dl-cap" x="${C}" y="${C+34}" text-anchor="middle">DAYS REMAINING</text>
+        <text class="dl-cap" x="${C}" y="${C+52}" text-anchor="middle" style="fill:var(--ink3)"><tspan data-t="hms"></tspan></text>
+        <text class="dl-quote" x="${C}" y="356" text-anchor="middle">"These violent delights have violent ends."</text>
+      </svg></div>`;
+    },
+    update(st){
+      const el = document.querySelector('.dial [data-t="hms"]');
+      if(el) el.textContent = `${st.h} : ${st.m} : ${st.s}`;
+    }
+  },
+  gram:{
+    build: () => `
+      <div class="gram">
+        <p class="gm-cap">Interval to emergence · <span data-t="src"></span></p>
+        <div class="gm-grid">
+          <div class="gm-cell"><b data-t="days">0</b><i>DAYS</i></div>
+          <div class="gm-cell"><b data-t="h">00</b><i>HOURS</i></div>
+          <div class="gm-cell"><b data-t="m">00</b><i>MINUTES</i></div>
+          <div class="gm-cell"><b data-t="s">00</b><i>SECONDS</i></div>
+        </div>
+        <p class="gm-foot">Librium standard time · Deviation will be noted</p>
+      </div>`,
+    update(){}
+  }
+};
+
+function setView(v, push){
+  if(!VIEWS[v]) v = "seer";
+  view = v;
+  const st = $("stage");
+  st.dataset.mode = v;
+  st.innerHTML = VIEWS[v].build();
+  document.querySelectorAll(".vbtn").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v));
+  try{ localStorage.setItem("tiresias-view", v); }catch(e){}
+  if(push !== false){
+    const u = new URL(location);
+    if(v === "seer") u.searchParams.delete("view"); else u.searchParams.set("view", v);
+    history.replaceState(null, "", u);
+  }
+  tick();
+}
+document.querySelectorAll(".vbtn").forEach(b => b.addEventListener("click", () => setView(b.dataset.v)));
+
+/* ---------- generic tick ---------- */
+function tick(){
+  const st = calc();
+  const stage = $("stage");
+  stage.querySelectorAll("[data-t]").forEach(el => {
+    switch(el.dataset.t){
+      case "label": el.textContent = labelTxt(); break;
+      case "src": el.textContent = srcName(); break;
+      case "days": el.textContent = st.gone ? "0" : st.d.toLocaleString(); break;
+      case "h": el.textContent = st.h; break;
+      case "m": el.textContent = st.m; break;
+      case "s": el.textContent = st.s; break;
+    }
+  });
+  VIEWS[view].update(st);
 }
 
 function renderFacts(){
@@ -459,9 +840,6 @@ function pick(id){
   if(id !== "agg" && !byId(id)) return;
   current = id;
   $("srcSel").value = id;
-  $("heroLabel").textContent = id === "agg"
-    ? "Days until artificial general intelligence"
-    : "Days until AGI, per " + srcName();
   document.querySelectorAll(".dot").forEach(el => el.classList.toggle("on", el.dataset.id === id));
   document.querySelectorAll(".sel-mark").forEach(el => { el.textContent = el.dataset.for === id ? "● " : ""; });
   document.querySelectorAll(".det-use").forEach(b => {
@@ -469,6 +847,7 @@ function pick(id){
     b.disabled = on;
     b.textContent = on ? "Shown above" : "Show on the clock";
   });
+  if(view === "dial") setView("dial", false);  /* re-derive the arc for the new target */
   tick();
   const d = dLeft(target());
   document.title = `Tiresias — ${Math.max(d,0).toLocaleString()} days until AGI`;
@@ -477,7 +856,7 @@ function pick(id){
   history.replaceState(null, "", u);
 }
 
-/* timeline */
+/* ---------- timeline ---------- */
 function buildTimeline(){
   const t0 = ts("2026-01-01"), t1 = ts("2037-06-01");
   const W = 1080, Y = 84;
@@ -524,7 +903,7 @@ function buildTimeline(){
   });
 }
 
-/* table */
+/* ---------- forecasts (grid rows, 3D hover) ---------- */
 function buildTable(){
   const rows = [...FORECASTS].sort((a,b)=>ts(a.date)-ts(b.date));
   $("tbody").innerHTML = rows.map(f => {
@@ -532,40 +911,145 @@ function buildTable(){
     const delta = Math.round((t - AGG_TIME)/86400000);
     const dTxt = delta === 0 ? "0" : (delta<0?"−":"+") + Math.abs(delta).toLocaleString() + " d";
     return `
-    <tr class="row" data-row="${f.id}" aria-expanded="false" tabindex="0">
-      <td><span class="t-name"><span class="sel-mark" data-for="${f.id}"></span>${esc(f.name)}</span><br><span class="t-aff">${esc(f.aff)}</span></td>
-      <td class="t-kind hide-s">${f.kind}</td>
-      <td class="t-date r">${f.date}</td>
-      <td class="t-days r">${t<=Date.now() ? "passed" : `<b>${d.toLocaleString()}</b>`}</td>
-      <td class="t-delta r hide-s">${dTxt}</td>
-      <td class="t-more" aria-hidden="true">+</td>
-    </tr>
-    <tr class="det" hidden><td colspan="6"><div class="det-in">
-      <p class="det-claim">${esc(f.claim)}</p>
-      ${f.asi ? `<p class="det-asi">${esc(f.asi)}</p>` : ""}
-      <div class="det-links">
-        ${f.links.map(l => `<a href="${l.u}" target="_blank" rel="noopener">${esc(l.t)}<em>${l.k}</em></a>`).join("")}
-      </div>
-      <button class="det-use" data-id="${f.id}">Show on the clock</button>
-    </div></td></tr>`;
+    <div class="fitem" role="rowgroup">
+      <button class="frow" data-row="${f.id}" aria-expanded="false">
+        <span class="fr-grid" role="row">
+          <span class="fc-name" role="cell"><span class="sel-mark" data-for="${f.id}"></span>${esc(f.name)}<span class="fc-aff">${esc(f.aff)}</span></span>
+          <span class="fc-kind hide-s" role="cell">${f.kind}</span>
+          <span class="fc-date" role="cell">${f.date}</span>
+          <span class="fc-days" role="cell">${t<=Date.now() ? "passed" : `<b>${d.toLocaleString()}</b>`}</span>
+          <span class="fc-delta hide-s" role="cell">${dTxt}</span>
+          <span class="fc-more" aria-hidden="true">+</span>
+        </span>
+        <span class="fc-claim">${esc(f.claim)}</span>
+      </button>
+      <div class="fdet" hidden><div class="det-in">
+        ${f.asi ? `<p class="det-asi">${esc(f.asi)}</p>` : ""}
+        <p class="det-ver">VERIFIED ${UPDATED} · EDITORIAL INTERPRETATION OF PRIMARY SOURCES BELOW</p>
+        <div class="det-links">
+          ${f.links.map(l => `<a href="${l.u}" target="_blank" rel="noopener">${esc(l.t)}<em>${l.k}</em></a>`).join("")}
+        </div>
+        <button class="det-use" data-id="${f.id}">Show on the clock</button>
+      </div></div>
+    </div>`;
   }).join("");
 
-  document.querySelectorAll("tr.row").forEach(tr => {
-    const toggle = () => {
-      const det = tr.nextElementSibling;
+  document.querySelectorAll(".frow").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const det = btn.parentElement.querySelector(".fdet");
       const open = det.hidden;
       det.hidden = !open;
-      tr.setAttribute("aria-expanded", open);
-      tr.querySelector(".t-more").textContent = open ? "−" : "+";
-    };
-    tr.addEventListener("click", toggle);
-    tr.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); } });
+      btn.setAttribute("aria-expanded", open);
+      btn.querySelector(".fc-more").textContent = open ? "−" : "+";
+    });
+    /* 3D tilt following the cursor */
+    btn.addEventListener("mousemove", e => {
+      if(reduceMotion) return;
+      const r = btn.getBoundingClientRect();
+      const px = (e.clientX - r.left)/r.width - .5;
+      const py = (e.clientY - r.top)/r.height - .5;
+      btn.style.transform = `perspective(1100px) rotateX(${(-py*3.2).toFixed(2)}deg) rotateY(${(px*2.6).toFixed(2)}deg) translateY(-2px)`;
+      btn.style.setProperty("--mx", (px*100+50).toFixed(1)+"%");
+      btn.style.setProperty("--my", (py*100+50).toFixed(1)+"%");
+    });
+    btn.addEventListener("mouseleave", () => { btn.style.transform = ""; });
   });
   document.querySelectorAll(".det-use").forEach(b =>
     b.addEventListener("click", e => { e.stopPropagation(); pick(b.dataset.id); scrollTo({top:0, behavior:"smooth"}); }));
 }
 
-/* copy buttons */
+/* ---------- neural field (hero canvas) ---------- */
+(function net(){
+  const c = $("net");
+  const ctx = c.getContext("2d", {alpha:true});
+  const HUES = [[15,138,110],[91,82,214],[224,82,5]];  /* teal, indigo, orange */
+  let W, H, nodes, edges, pulses, walk, raf, running = false;
+
+  function build(){
+    W = c.offsetWidth; H = c.offsetHeight;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    c.width = W * dpr; c.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const L = Math.max(4, Math.min(8, Math.round(W/190)));
+    nodes = []; edges = []; pulses = [];
+    for(let i=0;i<L;i++){
+      const n = 3 + ((i*7+3) % 4);
+      for(let j=0;j<n;j++){
+        nodes.push({
+          l:i,
+          x: W*(.04 + .92*i/(L-1)) + (Math.random()-.5)*26,
+          y: H*((j+1)/(n+1)) + (Math.random()-.5)*30,
+          r: 1.5 + Math.random()*1.7
+        });
+      }
+    }
+    for(let a=0;a<nodes.length;a++)
+      for(let b=0;b<nodes.length;b++)
+        if(nodes[b].l === nodes[a].l+1 && Math.random() < .5)
+          edges.push({a, b, h: (a+b) % 3});
+    for(let i=0;i<6;i++) pulses.push({e: Math.floor(Math.random()*edges.length), t: Math.random(), v: .004 + Math.random()*.006});
+    walk = {pts: [{x: W*.5, y: H*.5}], vx: .6, vy: .2};
+  }
+
+  function drawStatic(){
+    ctx.clearRect(0,0,W,H);
+    for(const e of edges){
+      const A = nodes[e.a], B = nodes[e.b], [r,g,b] = HUES[e.h];
+      ctx.strokeStyle = `rgba(${r},${g},${b},.11)`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(A.x, A.y);
+      ctx.bezierCurveTo((A.x+B.x)/2, A.y, (A.x+B.x)/2, B.y, B.x, B.y);
+      ctx.stroke();
+    }
+    for(const n of nodes){
+      ctx.fillStyle = "rgba(27,26,23,.28)";
+      ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 7); ctx.fill();
+    }
+  }
+
+  function frame(){
+    drawStatic();
+    /* signal pulses along edges */
+    for(const p of pulses){
+      p.t += p.v;
+      if(p.t > 1){ p.t = 0; p.e = Math.floor(Math.random()*edges.length); }
+      const e = edges[p.e]; if(!e) continue;
+      const A = nodes[e.a], B = nodes[e.b], t = p.t, u = 1-t;
+      const mx = (A.x+B.x)/2;
+      const x = u*u*u*A.x + 3*u*u*t*mx + 3*u*t*t*mx + t*t*t*B.x;
+      const y = u*u*u*A.y + 3*u*u*t*A.y + 3*u*t*t*B.y + t*t*t*B.y;
+      const [r,g,b] = HUES[e.h];
+      ctx.fillStyle = `rgba(${r},${g},${b},.55)`;
+      ctx.beginPath(); ctx.arc(x, y, 2.1, 0, 7); ctx.fill();
+    }
+    /* MCMC-style wander with fading trail */
+    const w = walk, last = w.pts[w.pts.length-1];
+    w.vx += (Math.random()-.5)*.5; w.vy += (Math.random()-.5)*.5;
+    w.vx = Math.max(-1.4, Math.min(1.4, w.vx)); w.vy = Math.max(-1.2, Math.min(1.2, w.vy));
+    let nx = last.x + w.vx, ny = last.y + w.vy;
+    if(nx < 0 || nx > W){ w.vx *= -1; nx = last.x; }
+    if(ny < 0 || ny > H){ w.vy *= -1; ny = last.y; }
+    w.pts.push({x:nx, y:ny});
+    if(w.pts.length > 90) w.pts.shift();
+    for(let i=1;i<w.pts.length;i++){
+      ctx.strokeStyle = `rgba(91,82,214,${(.22*i/w.pts.length).toFixed(3)})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(w.pts[i-1].x, w.pts[i-1].y); ctx.lineTo(w.pts[i].x, w.pts[i].y); ctx.stroke();
+    }
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start(){ if(!running && !reduceMotion){ running = true; raf = requestAnimationFrame(frame); } }
+  function stop(){ running = false; cancelAnimationFrame(raf); }
+
+  build();
+  if(reduceMotion) drawStatic(); else start();
+  addEventListener("resize", () => { build(); if(reduceMotion) drawStatic(); });
+  document.addEventListener("visibilitychange", () => { document.hidden ? stop() : start(); });
+})();
+
+/* ---------- copy buttons ---------- */
 document.querySelectorAll(".snip").forEach(w => {
   const b = document.createElement("button");
   b.className = "copy"; b.textContent = "Copy";
@@ -578,13 +1062,73 @@ document.querySelectorAll(".snip").forEach(w => {
   w.appendChild(b);
 });
 
-/* init */
-const qp = new URLSearchParams(location.search).get("source");
-if(qp && (qp === "agg" || byId(qp))) current = qp;
+/* ---------- widget: install prompt ---------- */
+let deferredInstall = null;
+addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredInstall = e;
+  $("installBtn").hidden = false;
+  $("installNote").textContent = "Installs in one step — a standalone window with its own icon.";
+});
+$("installBtn").addEventListener("click", async () => {
+  if(!deferredInstall) return;
+  deferredInstall.prompt();
+  await deferredInstall.userChoice;
+  deferredInstall = null;
+  $("installBtn").hidden = true;
+});
+if(matchMedia("(display-mode: standalone)").matches)
+  $("installNote").textContent = "Already installed — you are running the app now.";
+
+/* ---------- widget: always-on-top mini clock ---------- */
+$("pipBtn").addEventListener("click", async () => {
+  const mini = `
+    <div style="font-family:ui-monospace,Menlo,monospace;background:#f5f4f0;color:#1b1a17;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 20px;box-sizing:border-box">
+      <div style="font-size:9px;letter-spacing:.22em;color:#605e57">DAYS UNTIL AGI · TIRESIAS</div>
+      <div style="font-size:44px;font-weight:600;letter-spacing:-.02em;line-height:1.15" id="pd"></div>
+      <div style="font-size:12px;color:#605e57" id="ph"></div>
+    </div>`;
+  function bind(doc, win){
+    doc.body.style.margin = "0";
+    doc.body.innerHTML = mini;
+    const iv = setInterval(() => {
+      const t = target(), diff = t - Date.now();
+      if(diff <= 0){ doc.getElementById("pd").textContent = "0"; return; }
+      const d = Math.floor(diff/86400000);
+      let r = diff % 86400000;
+      const h = String(Math.floor(r/3600000)).padStart(2,"0"); r %= 3600000;
+      const m = String(Math.floor(r/60000)).padStart(2,"0");  r %= 60000;
+      const s = String(Math.floor(r/1000)).padStart(2,"0");
+      doc.getElementById("pd").textContent = d.toLocaleString();
+      doc.getElementById("ph").textContent = `${h}:${m}:${s} · ${srcName()}`;
+    }, 250);
+    win.addEventListener("pagehide", () => clearInterval(iv));
+  }
+  if("documentPictureInPicture" in window){
+    const pip = await documentPictureInPicture.requestWindow({width: 300, height: 130});
+    bind(pip.document, pip);
+  } else {
+    const pop = open("", "tiresias-mini", "width=300,height=130,popup=yes");
+    if(pop){ bind(pop.document, pop); }
+    else $("pipNote").textContent = "Popup blocked — allow popups for this site and try again.";
+  }
+});
+
+/* ---------- service worker ---------- */
+if("serviceWorker" in navigator && (location.protocol === "https:" || ["localhost","127.0.0.1"].includes(location.hostname)))
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+
+/* ---------- init ---------- */
+const qs = new URLSearchParams(location.search);
+const qsrc = qs.get("source");
+if(qsrc && (qsrc === "agg" || byId(qsrc))) current = qsrc;
+let v0 = qs.get("view");
+if(!v0){ try{ v0 = localStorage.getItem("tiresias-view"); }catch(e){} }
 renderFacts();
 buildSelect();
 buildTimeline();
 buildTable();
+setView(v0 || "seer", false);
 pick(current);
 setInterval(tick, 250);
 </script>

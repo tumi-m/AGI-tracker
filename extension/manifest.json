@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Tiresias — days until AGI",
+  "version": "1.0.0",
+  "description": "Days until AGI as a toolbar badge — the median of ten public forecasts. Recomputed locally, never phones home.",
+  "background": { "service_worker": "badge.js" },
+  "action": {
+    "default_title": "Tiresias — days until AGI",
+    "default_popup": "popup.html",
+    "default_icon": { "128": "icon-128.png" }
+  },
+  "permissions": ["alarms"],
+  "icons": { "128": "icon-128.png" }
+}
