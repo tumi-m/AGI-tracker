@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiresias — understand AGI</title>
+<meta name="description" content="What AGI is, why the date moves markets, and the best free articles, videos and books to understand what is coming. Economy = Debt + Productivity + Demographics.">
+<meta name="theme-color" content="#f5f4f0">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f5f4f0'/%3E%3Ccircle cx='32' cy='23' r='12' fill='%231b1a17'/%3E%3Cpath d='M18 31 C18 45 23 54 32 58 C41 54 46 45 46 31 C42 36 37 38.5 32 38.5 C27 38.5 22 36 18 31 Z' fill='%231b1a17'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --paper:#f5f4f0; --card:#fbfaf7;
+    --ink:#1b1a17; --ink2:#605e57; --ink3:#96938a;
+    --line:#e2e0d8; --line2:#cfcdc4;
+    --accent:#e05205; --accent-text:#b13f00;
+    --sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --w:1120px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  ::selection{background:var(--ink);color:var(--paper)}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line2)}
+  a:hover{text-decoration-color:var(--ink)}
+  button{font-family:inherit;cursor:pointer}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .cap{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:500}
+  .wrap{max-width:var(--w);margin:0 auto;padding:0 24px}
+  :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  header{border-bottom:1px solid var(--line)}
+  .h-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:600;letter-spacing:.22em;font-size:14px}
+  nav{display:flex;gap:28px}
+  nav a{text-decoration:none;font-size:13px;letter-spacing:.06em;color:var(--ink2)}
+  nav a:hover,nav a[aria-current]{color:var(--ink)}
+  @media(max-width:640px){nav{gap:16px} nav a.hm{display:none}}
+
+  .intro{padding:72px 0 56px;border-bottom:1px solid var(--line)}
+  .intro h1{font-size:clamp(30px,4.6vw,44px);font-weight:600;letter-spacing:-.02em;line-height:1.12;max-width:20ch}
+  .intro p{margin-top:16px;font-size:16px;color:var(--ink2);max-width:56ch}
+
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  h2{font-size:14px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px}
+  h2 span{color:var(--ink3);font-weight:500}
+  .lede{font-size:16px;color:var(--ink2);max-width:60ch;margin-bottom:40px}
+  .lede b{color:var(--ink);font-weight:600}
+
+  /* equation */
+  .eq{display:grid;grid-template-columns:auto auto 1fr;gap:0 18px;align-items:baseline;margin:8px 0 48px}
+  .eq .word{font-size:clamp(26px,4.4vw,46px);font-weight:200;letter-spacing:-.01em;white-space:nowrap}
+  .eq .op{font-size:clamp(22px,3.6vw,38px);font-weight:200;color:var(--ink3)}
+  @media(max-width:880px){.eq{grid-template-columns:1fr;gap:2px}.eq .op{display:none}.eq .word::before{content:attr(data-op) " ";color:var(--ink3)}}
+  .terms{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  @media(max-width:880px){.terms{grid-template-columns:1fr}}
+  .term{padding:28px 28px 32px;border-top:1px solid var(--ink)}
+  .term:nth-child(2){border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  @media(max-width:880px){.term:nth-child(2){border-left:0;border-right:0}}
+  .term h3{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+  .term .state{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin:2px 0 18px}
+  .term .state.hot{color:var(--accent-text)}
+  .term .big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(24px,2.6vw,32px);font-weight:500;letter-spacing:-.02em}
+  .term .big small{font-size:13px;color:var(--ink2);font-weight:400;letter-spacing:0}
+  .meter{height:3px;background:var(--line);margin:18px 0 14px;position:relative;overflow:hidden}
+  .meter i{position:absolute;inset:0 auto 0 0;width:0;background:var(--ink);transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
+  .meter.hot i{background:var(--accent)}
+  .term p{font-size:13.5px;color:var(--ink2);line-height:1.6}
+  .term p b{color:var(--ink);font-weight:600}
+
+  /* scenario chart */
+  .scen{margin-top:64px}
+  .scen-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:24px}
+  .scen-head h3{font-size:16px;font-weight:600;max-width:34ch}
+  .chips{display:flex;gap:0;border:1px solid var(--ink)}
+  .chip{background:none;border:none;padding:9px 18px;font:500 13px var(--sans);letter-spacing:.04em;color:var(--ink2);transition:.12s}
+  .chip + .chip{border-left:1px solid var(--line)}
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+  .chartbox{overflow-x:auto}
+  .chartbox svg{width:100%;min-width:600px;height:340px;display:block;overflow:visible}
+  .gl{stroke:var(--line);stroke-width:1}
+  .glb{fill:var(--ink3);font-size:11px;font-family:var(--mono)}
+  .base-l{stroke:var(--ink3);stroke-width:1.8;fill:none}
+  .agi-l{stroke:var(--accent);stroke-width:2.4;fill:none}
+  .endlab{font-size:12px;font-family:var(--mono);font-weight:500}
+  .cross{stroke:var(--line2);stroke-width:1;stroke-dasharray:2 3}
+  .readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:32px;border-top:1px solid var(--ink)}
+  .readout div{padding:18px 24px 4px;border-left:1px solid var(--line)}
+  .readout div:first-child{border-left:0;padding-left:0}
+  @media(max-width:640px){.readout{grid-template-columns:1fr}.readout div{border-left:0;padding-left:0}}
+  .readout b{display:block;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:30px;font-weight:500;letter-spacing:-.02em}
+  .readout b.hot{color:var(--accent-text)}
+  .readout span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+  .fine{margin-top:28px;font-size:12px;color:var(--ink3);max-width:76ch;line-height:1.7}
+
+  /* library */
+  .lib{display:grid;grid-template-columns:repeat(3,1fr);gap:64px}
+  @media(max-width:960px){.lib{grid-template-columns:1fr;gap:48px}}
+  .lib h3{font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;padding-bottom:12px;border-bottom:1px solid var(--ink);margin-bottom:8px}
+  .item{padding:16px 0;border-bottom:1px solid var(--line)}
+  .item a{font-size:15px;font-weight:600;text-decoration:none}
+  .item a:hover{text-decoration:underline;text-decoration-color:var(--ink)}
+  .item .meta{font-family:var(--mono);font-size:11.5px;color:var(--ink3);margin:3px 0 6px;letter-spacing:.02em}
+  .item p{font-size:13.5px;color:var(--ink2);line-height:1.55}
+
+  footer{padding:48px 0 72px}
+  .f-top{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;margin-bottom:32px}
+  .f-name{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.22em;font-size:13px}
+  .f-tag{font-size:13px;color:var(--ink2);margin-top:10px;max-width:44ch}
+  .f-links{display:flex;gap:24px;align-items:baseline}
+  .f-links a{text-decoration:none;font-size:13px;color:var(--ink2)}
+  .f-links a:hover{color:var(--ink)}
+  .f-small{font-size:12px;color:var(--ink3);max-width:76ch;line-height:1.7}
+
+  .tip{
+    position:fixed;z-index:40;pointer-events:none;opacity:0;transition:opacity .1s;
+    background:var(--card);border:1px solid var(--line2);
+    padding:8px 12px;font-size:12px;line-height:1.6;font-family:var(--mono);
+    box-shadow:0 2px 10px rgba(27,26,23,.08);white-space:nowrap;
+  }
+  .tip.show{opacity:1}
+  @media(prefers-reduced-motion:reduce){.meter i{transition:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="seer">
+      <circle cx="32" cy="23" r="12"/>
+      <path d="M18 31 C18 45 23 54 32 58 C41 54 46 45 46 31 C42 36 37 38.5 32 38.5 C27 38.5 22 36 18 31 Z"/>
+    </g>
+  </defs>
+</svg>
+
+<header>
+  <div class="wrap h-in">
+    <a class="brand" href="./" aria-label="Tiresias home">
+      <svg width="26" height="26" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><use href="#seer"/></svg>
+      TIRESIAS
+    </a>
+    <nav aria-label="Sections">
+      <a href="./" class="hm">Clock</a>
+      <a href="resources.html" aria-current="page">Resources</a>
+      <a href="./#embed" class="hm">Embed</a>
+      <a href="data/forecasts.json">Data</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<div class="intro wrap">
+  <h1>Understand what the clock is counting.</h1>
+  <p>AGI — artificial general intelligence — means a system that matches or beats capable humans at most cognitive work. Nobody agrees on the exact line, which is why the clock tracks ten definitions at once. This page is the context: why the date moves markets, and the best free material to form your own view.</p>
+</div>
+
+<section id="economy">
+  <div class="wrap">
+    <h2>Why the date matters <span>— the only lever left</span></h2>
+    <p class="lede">Strip an economy to its drivers and you get three terms. Two of them are already spoken for. <b>Everything priced in a market — equities, rates, credit, crypto — is a bet on the third.</b></p>
+
+    <div class="eq" aria-label="Economy equals debt plus productivity plus demographics">
+      <span class="word">ECONOMY</span><span class="op">=</span>
+      <span class="word" style="grid-column:1" data-op="=">DEBT&nbsp;&nbsp;<span class="op">+</span>&nbsp;&nbsp;PRODUCTIVITY&nbsp;&nbsp;<span class="op">+</span>&nbsp;&nbsp;DEMOGRAPHICS</span>
+    </div>
+
+    <div class="terms">
+      <div class="term">
+        <h3>Debt</h3>
+        <p class="state">Lever spent</p>
+        <p class="big mono">$<span id="debt">324.0</span>T <small>global, still counting</small></p>
+        <div class="meter"><i data-fill="93%"></i></div>
+        <p>Borrowing pulls tomorrow's growth into today. At roughly <b>three times world GDP</b>, the developed world has already pulled hard. This number ticks up about ten trillion dollars a year.</p>
+      </div>
+      <div class="term">
+        <h3>Productivity</h3>
+        <p class="state hot">The open variable</p>
+        <p class="big mono">~1.5% <small>per year, two decades</small></p>
+        <div class="meter hot"><i data-fill="18%"></i></div>
+        <p>Output per hour of work — the only term that compounds without a bill. It has crawled since 2005. <b>AGI is the largest claim ever made about this number</b>, which is why its date is the most important date in finance.</p>
+      </div>
+      <div class="term">
+        <h3>Demographics</h3>
+        <p class="state">Reversing</p>
+        <p class="big mono">2015 <small>peak working-age share, adv. economies</small></p>
+        <div class="meter"><i data-fill="38%"></i></div>
+        <p>Fewer workers, more retirees, fertility below replacement across the OECD and China. For the first time in the industrial era, <b>this term subtracts</b>.</p>
+      </div>
+    </div>
+
+    <div class="scen">
+      <div class="scen-head">
+        <h3>What an AGI-sized productivity shock does to the curve</h3>
+        <div class="chips" role="group" aria-label="Choose scenario">
+          <button class="chip" data-sc="2027" aria-pressed="false">AGI 2027</button>
+          <button class="chip" data-sc="2030" aria-pressed="true">AGI 2030</button>
+          <button class="chip" data-sc="none" aria-pressed="false">No AGI</button>
+        </div>
+      </div>
+      <div class="chartbox" id="chartbox"></div>
+      <div class="readout">
+        <div><b id="roBase">×1.8</b><span>World output 2046, baseline</span></div>
+        <div><b class="hot" id="roAgi">×4.2</b><span>World output 2046, scenario</span></div>
+        <div><b id="roGap">+2.4</b><span>Extra 2026-economies created</span></div>
+      </div>
+      <p class="fine">Stylized illustration, not a forecast: baseline compounds at 3% a year; the scenario ramps growth from 3% to 10% over the four years after the AGI date, then holds. The point is not the exact path — it is that a moved productivity term dwarfs every other input, and repriced assets follow. Forecast dates come from the sources on the <a href="./">clock</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section id="library">
+  <div class="wrap">
+    <h2>The library <span>— free, no paywalls</span></h2>
+    <p class="lede">Twenty ways in, from a five-minute essay to a five-hour interview. Start anywhere; the order inside each list is a suggestion.</p>
+    <div class="lib">
+
+      <div>
+        <h3>Read</h3>
+        <div class="item">
+          <a href="https://blog.samaltman.com/the-intelligence-age" target="_blank" rel="noopener">The Intelligence Age</a>
+          <p class="meta">Sam Altman · 2024 · 5 min</p>
+          <p>The CEO of OpenAI in 1,100 words: superintelligence in "a few thousand days."</p>
+        </div>
+        <div class="item">
+          <a href="https://darioamodei.com/machines-of-loving-grace" target="_blank" rel="noopener">Machines of Loving Grace</a>
+          <p class="meta">Dario Amodei · 2024 · 45 min</p>
+          <p>Anthropic's CEO on the decade after powerful AI — if it goes right. The optimistic case, argued carefully.</p>
+        </div>
+        <div class="item">
+          <a href="https://situational-awareness.ai/" target="_blank" rel="noopener">Situational Awareness</a>
+          <p class="meta">Leopold Aschenbrenner · 2024 · long read</p>
+          <p>The essay that moved billions: from GPT-4 to superintelligence by 2027, cluster by cluster.</p>
+        </div>
+        <div class="item">
+          <a href="https://ai-2027.com/" target="_blank" rel="noopener">AI 2027</a>
+          <p class="meta">Kokotajlo, Lifland et al. · 2025 · long read</p>
+          <p>A month-by-month scenario of an intelligence explosion, with two endings. Read both.</p>
+        </div>
+        <div class="item">
+          <a href="https://waitbutwhy.com/2015/01/artificial-intelligence-revolution-1.html" target="_blank" rel="noopener">The AI Revolution</a>
+          <p class="meta">Tim Urban, Wait But Why · 2015 · 45 min</p>
+          <p>Still the funniest, clearest on-ramp to why exponential curves feel like nothing, then everything.</p>
+        </div>
+        <div class="item">
+          <a href="https://ourworldindata.org/artificial-intelligence" target="_blank" rel="noopener">Artificial Intelligence</a>
+          <p class="meta">Our World in Data · updated</p>
+          <p>Every chart you need to argue about AI, in one place, with sources.</p>
+        </div>
+        <div class="item">
+          <a href="https://epoch.ai/trends" target="_blank" rel="noopener">AI Trends</a>
+          <p class="meta">Epoch AI · updated</p>
+          <p>The measured version: compute, data and capability curves, tracked like economic indicators.</p>
+        </div>
+      </div>
+
+      <div>
+        <h3>Watch</h3>
+        <div class="item">
+          <a href="https://www.youtube.com/watch?v=MnT1xgZgkpk" target="_blank" rel="noopener">What happens when our computers get smarter than we are?</a>
+          <p class="meta">Nick Bostrom · TED · 16 min</p>
+          <p>The philosopher who defined the field, giving the whole argument in a quarter hour.</p>
+        </div>
+        <div class="item">
+          <a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" rel="noopener">But what is a neural network?</a>
+          <p class="meta">3Blue1Brown · 18 min</p>
+          <p>The most beautiful visual explanation of the machinery underneath all of this.</p>
+        </div>
+        <div class="item">
+          <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g" target="_blank" rel="noopener">Intro to Large Language Models</a>
+          <p class="meta">Andrej Karpathy · 1 h</p>
+          <p>An OpenAI co-founder at a whiteboard: what a model actually is, without hand-waving.</p>
+        </div>
+        <div class="item">
+          <a href="https://www.youtube.com/watch?v=ugvHCXCOmm4" target="_blank" rel="noopener">Dario Amodei — Lex Fridman #452</a>
+          <p class="meta">Podcast · 2024 · 5 h</p>
+          <p>Five hours inside the head of the man whose 2027 date sits near the top of the clock.</p>
+        </div>
+        <div class="item">
+          <a href="https://www.youtube.com/watch?v=WXuK6gekU1Y" target="_blank" rel="noopener">AlphaGo — The Movie</a>
+          <p class="meta">DeepMind · 90 min</p>
+          <p>The night a machine played a move no human would, and a world champion retired. Where the current era started.</p>
+        </div>
+        <div class="item">
+          <a href="https://www.youtube.com/watch?v=8nt3edWLgIg" target="_blank" rel="noopener">Can we build AI without losing control over it?</a>
+          <p class="meta">Sam Harris · TED · 14 min</p>
+          <p>The uncomfortable version of the argument, delivered calmly.</p>
+        </div>
+      </div>
+
+      <div>
+        <h3>Books</h3>
+        <div class="item">
+          <a href="https://en.wikipedia.org/wiki/Superintelligence:_Paths,_Dangers,_Strategies" target="_blank" rel="noopener">Superintelligence</a>
+          <p class="meta">Nick Bostrom · 2014</p>
+          <p>The book that started the modern conversation: paths, dangers, strategies.</p>
+        </div>
+        <div class="item">
+          <a href="https://en.wikipedia.org/wiki/Deep_Utopia" target="_blank" rel="noopener">Deep Utopia</a>
+          <p class="meta">Nick Bostrom · 2024</p>
+          <p>The sequel nobody expected: if we solve everything, what is left to want?</p>
+        </div>
+        <div class="item">
+          <a href="https://en.wikipedia.org/wiki/Human_Compatible" target="_blank" rel="noopener">Human Compatible</a>
+          <p class="meta">Stuart Russell · 2019</p>
+          <p>The man who wrote the standard AI textbook, on why the standard model is dangerous.</p>
+        </div>
+        <div class="item">
+          <a href="https://en.wikipedia.org/wiki/Life_3.0" target="_blank" rel="noopener">Life 3.0</a>
+          <p class="meta">Max Tegmark · 2017</p>
+          <p>Twelve futures, from benevolent dictator to zookeeper. Pick the one you are betting on.</p>
+        </div>
+        <div class="item">
+          <a href="https://en.wikipedia.org/wiki/The_Coming_Wave" target="_blank" rel="noopener">The Coming Wave</a>
+          <p class="meta">Mustafa Suleyman · 2023</p>
+          <p>DeepMind's co-founder on why containment — not capability — is the problem of the century.</p>
+        </div>
+        <div class="item">
+          <a href="https://en.wikipedia.org/wiki/The_Alignment_Problem" target="_blank" rel="noopener">The Alignment Problem</a>
+          <p class="meta">Brian Christian · 2020</p>
+          <p>The best-written tour of how machines learn our values — and miss.</p>
+        </div>
+        <div class="item">
+          <a href="https://en.wikipedia.org/wiki/The_Singularity_Is_Nearer" target="_blank" rel="noopener">The Singularity Is Nearer</a>
+          <p class="meta">Ray Kurzweil · 2024</p>
+          <p>The original optimist updates his bet, forty years in: merge by 2045.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <div>
+        <div class="f-name">
+          <svg width="22" height="22" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><use href="#seer"/></svg>
+          TIRESIAS
+        </div>
+        <p class="f-tag">Named for the blind seer of Thebes — who was right, and was not believed.</p>
+      </div>
+      <div class="f-links">
+        <a href="./">Clock</a>
+        <a href="./#embed">Embed</a>
+        <a href="data/forecasts.json">Dataset</a>
+      </div>
+    </div>
+    <p class="f-small">
+      Figures on this page are widely reported approximations (IIF global debt, OECD demographic and productivity series) used for orientation, and the scenario chart is a stylized illustration, not investment advice. External links are to free, non-paywalled material; availability may change.
+    </p>
+  </div>
+</footer>
+
+<div class="tip" id="tip" aria-hidden="true"></div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* live debt counter — $324T base (mid-2026), ~$10T/yr growth */
+const DEBT_BASE = 324.0e12, DEBT_RATE = 10e12 / 31557600000; /* $ per ms */
+const DEBT_T0 = Date.parse("2026-07-01T00:00:00Z");
+function debtTick(){
+  const v = (DEBT_BASE + (Date.now() - DEBT_T0) * DEBT_RATE) / 1e12;
+  $("debt").textContent = v.toFixed(4);
+}
+debtTick(); setInterval(debtTick, 100);
+
+/* meters fill when scrolled into view */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){
+    e.target.querySelectorAll(".meter i").forEach(i => { i.style.width = i.dataset.fill; });
+    io.unobserve(e.target);
+  }
+}), {threshold:.3});
+io.observe(document.querySelector(".terms"));
+
+/* ---- scenario chart ---- */
+const Y0 = 2026, Y1 = 2046, YEARS = [];
+for(let y=Y0; y<=Y1; y++) YEARS.push(y);
+const BASE_G = 0.03, AGI_G = 0.10, RAMP = 4;
+
+function series(agiYear){
+  const out = [1]; let g;
+  for(let i=1; i<YEARS.length; i++){
+    const yr = Y0 + i;
+    if(agiYear == null || yr <= agiYear) g = BASE_G;
+    else g = Math.min(BASE_G + (AGI_G - BASE_G) * (yr - agiYear) / RAMP, AGI_G);
+    out.push(out[i-1] * (1+g));
+  }
+  return out;
+}
+const BASE = series(null);
+const SCEN = {"2027": series(2027), "2030": series(2030), "none": BASE};
+let cur = "2030";
+let shown = SCEN[cur].slice();  /* animated values */
+
+const W = 1080, H = 340, PL = 8, PR = 118, PT = 16, PB = 34;
+const YMAX = 5.4;
+const xAt = i => PL + (W-PL-PR) * i / (YEARS.length-1);
+const yAt = v => PT + (H-PT-PB) * (1 - v/YMAX);
+const path = arr => arr.map((v,i) => (i?"L":"M") + xAt(i).toFixed(1) + " " + yAt(v).toFixed(1)).join(" ");
+
+function buildChart(){
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="World output 2026 to 2046, baseline versus AGI scenario">`;
+  for(let m=1; m<=5; m++){
+    s += `<line class="gl" x1="${PL}" y1="${yAt(m)}" x2="${W-PR}" y2="${yAt(m)}"/>`;
+    s += `<text class="glb" x="${PL}" y="${yAt(m)-6}">×${m}</text>`;
+  }
+  for(let yr=Y0; yr<=Y1; yr+=5){
+    const xx = xAt(yr-Y0);
+    s += `<text class="glb" x="${xx}" y="${H-10}" text-anchor="middle">${yr}</text>`;
+  }
+  s += `<path class="base-l" id="pBase" d="${path(BASE)}"/>`;
+  s += `<path class="agi-l" id="pAgi" d="${path(shown)}"/>`;
+  s += `<line class="cross" id="cross" y1="${PT}" y2="${H-PB}" x1="-10" x2="-10" opacity="0"/>`;
+  s += `<circle id="hb" r="3.5" fill="var(--ink3)" opacity="0"/><circle id="ha" r="4" fill="var(--accent)" opacity="0"/>`;
+  s += `<text class="endlab" id="lBase" fill="var(--ink2)"></text>`;
+  s += `<text class="endlab" id="lAgi" fill="var(--accent-text)"></text>`;
+  s += `</svg>`;
+  $("chartbox").innerHTML = s;
+  positionLabels();
+  hover();
+}
+function positionLabels(){
+  const lb = $("lBase"), la = $("lAgi");
+  const bx = W-PR+10;
+  let by = yAt(BASE[BASE.length-1]), ay = yAt(shown[shown.length-1]);
+  if(Math.abs(by-ay) < 16){ ay = by - 16; }
+  lb.setAttribute("x", bx); lb.setAttribute("y", by+4);
+  lb.textContent = `No AGI ×${BASE[BASE.length-1].toFixed(1)}`;
+  la.setAttribute("x", bx); la.setAttribute("y", ay+4);
+  la.textContent = cur==="none" ? "" : `AGI ${cur} ×${SCEN[cur][SCEN[cur].length-1].toFixed(1)}`;
+}
+function readout(){
+  const end = SCEN[cur][SCEN[cur].length-1], base = BASE[BASE.length-1];
+  $("roBase").textContent = "×" + base.toFixed(1);
+  $("roAgi").textContent = "×" + end.toFixed(1);
+  $("roGap").textContent = (end-base <= 0 ? "+0.0" : "+" + (end-base).toFixed(1));
+}
+function tween(to){
+  if(reduceMotion){ shown = to.slice(); $("pAgi").setAttribute("d", path(shown)); positionLabels(); return; }
+  const from = shown.slice(), t0 = performance.now(), DUR = 450;
+  (function step(now){
+    const p = Math.min(1, (now-t0)/DUR), e = 1-Math.pow(1-p,3);
+    shown = from.map((v,i) => v + (to[i]-v)*e);
+    $("pAgi").setAttribute("d", path(shown));
+    positionLabels();
+    if(p<1) requestAnimationFrame(step);
+  })(t0);
+}
+document.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => {
+  cur = c.dataset.sc;
+  document.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", x===c));
+  tween(SCEN[cur]); readout();
+}));
+function hover(){
+  const svg = $("chartbox").querySelector("svg"), tip = $("tip");
+  const cross = $("cross"), hb = $("hb"), ha = $("ha");
+  svg.addEventListener("mousemove", e => {
+    const r = svg.getBoundingClientRect();
+    const fx = (e.clientX - r.left) / r.width * W;
+    let i = Math.round((fx - PL) / (W-PL-PR) * (YEARS.length-1));
+    i = Math.max(0, Math.min(YEARS.length-1, i));
+    const xx = xAt(i);
+    cross.setAttribute("x1", xx); cross.setAttribute("x2", xx); cross.setAttribute("opacity", 1);
+    hb.setAttribute("cx", xx); hb.setAttribute("cy", yAt(BASE[i])); hb.setAttribute("opacity", 1);
+    const sc = SCEN[cur];
+    if(cur === "none"){ ha.setAttribute("opacity", 0); }
+    else { ha.setAttribute("cx", xx); ha.setAttribute("cy", yAt(sc[i])); ha.setAttribute("opacity", 1); }
+    tip.innerHTML = `<b>${YEARS[i]}</b> · baseline ×${BASE[i].toFixed(2)}` +
+      (cur==="none" ? "" : ` · AGI ${cur} ×${sc[i].toFixed(2)}`);
+    tip.style.left = Math.min(e.clientX + 12, innerWidth - 300) + "px";
+    tip.style.top = (e.clientY + 16) + "px";
+    tip.classList.add("show");
+  });
+  svg.addEventListener("mouseleave", () => {
+    tip.classList.remove("show");
+    cross.setAttribute("opacity", 0); hb.setAttribute("opacity", 0); ha.setAttribute("opacity", 0);
+  });
+}
+buildChart(); readout();
+</script>
+</body>
+</html>
