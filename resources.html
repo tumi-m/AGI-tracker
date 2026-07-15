@@ -62,6 +62,8 @@
   .term .state.hot{color:var(--accent-text)}
   .term .big{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(24px,2.6vw,32px);font-weight:500;letter-spacing:-.02em}
   .term .big small{font-size:13px;color:var(--ink2);font-weight:400;letter-spacing:0}
+  .term .big.roll{font-size:clamp(16px,1.7vw,20px);white-space:nowrap}
+  .term .big.roll small{display:block;margin-top:2px}
   .meter{height:3px;background:var(--line);margin:18px 0 14px;position:relative;overflow:hidden}
   .meter i{position:absolute;inset:0 auto 0 0;width:0;background:var(--ink);transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
   .meter.hot i{background:var(--accent)}
@@ -169,7 +171,7 @@
       <div class="term">
         <h3>Debt</h3>
         <p class="state">Lever spent</p>
-        <p class="big mono">$<span id="debt">324.0</span>T <small>global, still counting</small></p>
+        <p class="big mono roll">$<span id="debt">324,000,000,000,000</span> <small>global, still counting</small></p>
         <div class="meter"><i data-fill="93%"></i></div>
         <p>Borrowing pulls tomorrow's growth into today. At roughly <b>three times world GDP</b>, the developed world has already pulled hard. This number ticks up about ten trillion dollars a year.</p>
       </div>
@@ -366,8 +368,8 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const DEBT_BASE = 324.0e12, DEBT_RATE = 10e12 / 31557600000; /* $ per ms */
 const DEBT_T0 = Date.parse("2026-07-01T00:00:00Z");
 function debtTick(){
-  const v = (DEBT_BASE + (Date.now() - DEBT_T0) * DEBT_RATE) / 1e12;
-  $("debt").textContent = v.toFixed(4);
+  const v = DEBT_BASE + (Date.now() - DEBT_T0) * DEBT_RATE;
+  $("debt").textContent = Math.round(v).toLocaleString("en-US");
 }
 debtTick(); setInterval(debtTick, 100);
 
