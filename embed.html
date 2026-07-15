@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGI Countdown — embed</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --bg:#05060a; --surface:#0e1118; --border:#1c2131;
+    --ink:#e8ebf2; --ink2:#9aa3b8; --ink3:#5c6478; --accent:#5eead4;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+  }
+  html[data-theme="light"]{
+    --bg:#f7f8fa; --surface:#ffffff; --border:#dfe3ea;
+    --ink:#12141c; --ink2:#4b5265; --ink3:#8a92a6; --accent:#0d9488;
+  }
+  html[data-transparent="1"]{--bg:transparent;--surface:transparent;--border:transparent}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:14px;overflow:hidden;
+  }
+  .clock{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .cu{
+    background:var(--surface);border:1px solid var(--border);border-radius:8px;
+    min-width:74px;padding:10px 10px 8px;text-align:center;
+  }
+  .cu b{display:block;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(20px,6vw,30px);font-weight:700;line-height:1.1}
+  .cu small{color:var(--ink3);font-size:9px;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
+  .cu.days b{color:var(--accent)}
+  .meta{color:var(--ink2);font-size:11px;margin-top:10px;text-align:center;letter-spacing:.02em}
+  .meta b{color:var(--ink)}
+  .attr{
+    position:fixed;right:8px;bottom:6px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;
+    color:var(--ink3);text-decoration:none;
+  }
+  .attr:hover{color:var(--accent)}
+  /* compact strip mode */
+  body.compact{padding:6px;justify-content:center}
+  body.compact .clock{gap:0;flex-wrap:nowrap}
+  body.compact .cu{background:none;border:none;min-width:0;padding:0 7px;display:inline-flex;align-items:baseline;gap:5px}
+  body.compact .cu b{font-size:clamp(15px,4.5vw,20px)}
+  body.compact .cu small{letter-spacing:.1em}
+  body.compact .meta{display:none}
+  body.compact .attr{position:static;margin-left:12px}
+  body.compact .wrap{display:flex;align-items:baseline}
+  .expired{color:var(--ink2);font-size:13px;text-align:center;line-height:1.6}
+  .expired b{display:block;color:var(--ink);font-size:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="clock" id="clock"></div>
+  <p class="meta" id="meta"></p>
+  <a class="attr" href="https://agitracker.io/" target="_blank" rel="noopener" id="attr">agitracker.io</a>
+</div>
+<script>
+"use strict";
+/* Targets mirror data/forecasts.json — the canonical dataset */
+const T = {
+  amodei:["Dario Amodei","2027-01-01"],
+  aschenbrenner:["Leopold Aschenbrenner","2027-07-01"],
+  altman:["Sam Altman","2028-01-01"],
+  manifold:["Manifold Markets","2028-01-01"],
+  "metaculus-weak":["Metaculus (weak AGI)","2028-06-20"],
+  kokotajlo:["Daniel Kokotajlo","2030-07-01"],
+  hassabis:["Demis Hassabis","2030-12-31"],
+  polymarket:["Polymarket","2031-01-01"],
+  metaculus:["Metaculus (full AGI)","2033-01-01"],
+  lecun:["Yann LeCun","2036-07-01"]
+};
+const ts = d => Date.parse(d+"T00:00:00Z");
+const all = Object.values(T).map(v=>ts(v[1])).sort((a,b)=>a-b);
+const m = Math.floor(all.length/2);
+const AGG = all.length%2 ? all[m] : (all[m-1]+all[m])/2;
+
+const q = new URLSearchParams(location.search);
+const srcId = q.get("source") && T[q.get("source")] ? q.get("source") : "agg";
+const target = srcId==="agg" ? AGG : ts(T[srcId][1]);
+const name = srcId==="agg" ? "expert median" : T[srcId][0];
+
+if(q.get("theme")==="light") document.documentElement.dataset.theme = "light";
+if(q.get("transparent")==="1") document.documentElement.dataset.transparent = "1";
+if(q.get("compact")==="1") document.body.classList.add("compact");
+
+const UNITS = {days:86400000, hrs:3600000, min:60000, sec:1000};
+const ALIAS = {hours:"hrs", minutes:"min", seconds:"sec", d:"days", h:"hrs", m:"min", s:"sec"};
+let units = (q.get("units")||"days,hrs,min,sec").split(",")
+  .map(u => ALIAS[u.trim()] || u.trim()).filter(u => UNITS[u]);
+if(!units.length) units = ["days"];
+
+const clock = document.getElementById("clock");
+clock.innerHTML = units.map(u =>
+  `<div class="cu ${u==="days"?"days":""}"><b data-u="${u}">0</b><small>${u}</small></div>`).join("");
+const els = {}; clock.querySelectorAll("[data-u]").forEach(el => els[el.dataset.u] = el);
+document.getElementById("meta").innerHTML =
+  `until AGI · <b>${name}</b> · ${new Date(target).toISOString().slice(0,10)}`;
+
+function tick(){
+  let diff = target - Date.now();
+  if(diff <= 0){
+    clock.innerHTML = `<div class="expired"><b>Forecast window closed</b>${name} — history will judge</div>`;
+    return;
+  }
+  for(const u of units){
+    const v = Math.floor(diff / UNITS[u]);
+    diff -= v * UNITS[u];
+    const s = u==="days" ? v.toLocaleString() : String(v).padStart(2,"0");
+    if(els[u].textContent !== s) els[u].textContent = s;
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body>
+</html>

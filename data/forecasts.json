@@ -1,0 +1,174 @@
+{
+  "updated": "2026-07-15",
+  "methodology": "Aggregate is the transparent median of all tracked forecast dates, recomputed on any update. Forecast dates are editorial interpretations of public statements and community medians. Every date links to its primary source with a last-verified stamp.",
+  "forecasts": [
+    {
+      "id": "amodei",
+      "name": "Dario Amodei",
+      "affiliation": "CEO, Anthropic",
+      "target_date": "2027-01-01",
+      "kind": "public_statement",
+      "claim": "Expects powerful AI — better than almost all humans at almost all cognitive tasks — late 2026 / early 2027.",
+      "asi_note": null,
+      "source_url": "https://darioamodei.com/machines-of-loving-grace",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "Machines of Loving Grace", "url": "https://darioamodei.com/machines-of-loving-grace", "type": "essay" },
+        { "title": "Anthropic OSTP submission", "url": "https://www.anthropic.com/news/anthropic-s-recommendations-ostp-u-s-ai-action-plan", "type": "essay" }
+      ],
+      "history": []
+    },
+    {
+      "id": "aschenbrenner",
+      "name": "Leopold Aschenbrenner",
+      "affiliation": "Situational Awareness",
+      "target_date": "2027-07-01",
+      "kind": "public_statement",
+      "claim": "AGI by 2027 is strikingly plausible; trillion-dollar clusters thesis (June 2024).",
+      "asi_note": "ASI by ~2030",
+      "source_url": "https://situational-awareness.ai/",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "Situational Awareness (essay)", "url": "https://situational-awareness.ai/", "type": "essay" },
+        { "title": "Two years later — scorecard", "url": "https://forum.effectivealtruism.org/posts/RuwF8FCfpsLeZRgur/how-did-leopold-do-evaluating-situational-awareness-s", "type": "analysis" },
+        { "title": "@leopoldasch on X", "url": "https://x.com/leopoldasch", "type": "post" }
+      ],
+      "history": []
+    },
+    {
+      "id": "altman",
+      "name": "Sam Altman",
+      "affiliation": "CEO, OpenAI",
+      "target_date": "2028-01-01",
+      "kind": "public_statement",
+      "claim": "AGI probably developed within the current US presidential term.",
+      "asi_note": "Superintelligence in a few thousand days",
+      "source_url": "https://blog.samaltman.com/the-intelligence-age",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "The Intelligence Age", "url": "https://blog.samaltman.com/the-intelligence-age", "type": "essay" },
+        { "title": "Reflections", "url": "https://blog.samaltman.com/reflections", "type": "essay" },
+        { "title": "@sama on X", "url": "https://x.com/sama", "type": "post" }
+      ],
+      "history": []
+    },
+    {
+      "id": "manifold",
+      "name": "Manifold Markets",
+      "affiliation": "Prediction market",
+      "target_date": "2028-01-01",
+      "kind": "market_odds",
+      "claim": "Traders put roughly even odds on AGI before 2028.",
+      "asi_note": null,
+      "source_url": "https://manifold.markets/news/agi",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "Manifold AGI markets", "url": "https://manifold.markets/news/agi", "type": "market" }
+      ],
+      "history": []
+    },
+    {
+      "id": "metaculus-weak",
+      "name": "Metaculus (weak AGI)",
+      "affiliation": "Forecasting community",
+      "target_date": "2028-06-20",
+      "kind": "median",
+      "claim": "Community median for weakly general AI publicly known.",
+      "asi_note": null,
+      "source_url": "https://www.metaculus.com/questions/3479/date-weakly-general-ai-is-publicly-known/",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "The live question", "url": "https://www.metaculus.com/questions/3479/date-weakly-general-ai-is-publicly-known/", "type": "market" }
+      ],
+      "history": []
+    },
+    {
+      "id": "kokotajlo",
+      "name": "Daniel Kokotajlo",
+      "affiliation": "AI Futures Project · AI 2027",
+      "target_date": "2030-07-01",
+      "kind": "median",
+      "claim": "Author of AI 2027; has since revised his median to ~2030 (lots of uncertainty).",
+      "asi_note": "Scenario: ASI follows AGI within ~1 yr",
+      "source_url": "https://ai-2027.com/",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "AI 2027 (full scenario)", "url": "https://ai-2027.com/", "type": "essay" },
+        { "title": "AI 2027, six months later", "url": "https://futuresearch.ai/blog/ai-2027-6-months-later/", "type": "analysis" },
+        { "title": "His 2021 predictions, graded", "url": "https://asteriskmag.substack.com/p/before-he-wrote-ai-2027-he-predicted", "type": "analysis" },
+        { "title": "@DKokotajlo on X", "url": "https://x.com/DKokotajlo", "type": "post" }
+      ],
+      "history": [
+        { "date": "2025-04-01", "target": "2028-01-01" },
+        { "date": "2026-01-01", "target": "2030-07-01" }
+      ]
+    },
+    {
+      "id": "hassabis",
+      "name": "Demis Hassabis",
+      "affiliation": "CEO, Google DeepMind",
+      "target_date": "2030-12-31",
+      "kind": "public_statement",
+      "claim": "~50% chance of AGI by end of the decade (WEF 2026).",
+      "asi_note": null,
+      "source_url": "https://theagiclock.com/predictors/",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "Forecaster comparison", "url": "https://theagiclock.com/predictors/", "type": "analysis" },
+        { "title": "@demishassabis on X", "url": "https://x.com/demishassabis", "type": "post" }
+      ],
+      "history": []
+    },
+    {
+      "id": "polymarket",
+      "name": "Polymarket",
+      "affiliation": "Prediction market",
+      "target_date": "2031-01-01",
+      "kind": "market_odds",
+      "claim": "Traders price only ~8–14% on an AGI announcement by 2027 — implied median around the early 2030s (editorial interpolation).",
+      "asi_note": null,
+      "source_url": "https://polymarket.com/predictions/agi",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "Polymarket AGI odds", "url": "https://polymarket.com/predictions/agi", "type": "market" },
+        { "title": "Reading AGI from markets", "url": "https://www.lesswrong.com/posts/dRbvHfEwb6Cuf6xn3/forecasting-agi-insights-from-prediction-markets-and-1", "type": "analysis" }
+      ],
+      "history": []
+    },
+    {
+      "id": "metaculus",
+      "name": "Metaculus (full AGI)",
+      "affiliation": "Forecasting community",
+      "target_date": "2033-01-01",
+      "kind": "median",
+      "claim": "Community median for a general AI system devised, tested and announced (incl. robotics criteria). 25% by 2029.",
+      "asi_note": null,
+      "source_url": "https://www.metaculus.com/questions/5121/when-will-the-first-general-ai-system-be-devised-tested-and-publicly-announced/",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "The live question", "url": "https://www.metaculus.com/questions/5121/when-will-the-first-general-ai-system-be-devised-tested-and-publicly-announced/", "type": "market" }
+      ],
+      "history": []
+    },
+    {
+      "id": "lecun",
+      "name": "Yann LeCun",
+      "affiliation": "Meta · skeptic",
+      "target_date": "2036-07-01",
+      "kind": "public_statement",
+      "claim": "Current architectures cannot get there; ~10 years IF new components (world models, memory) arrive.",
+      "asi_note": null,
+      "source_url": "https://aimultiple.com/artificial-general-intelligence-singularity-timing",
+      "verified": "2026-07-15",
+      "links": [
+        { "title": "9,800 predictions analyzed", "url": "https://aimultiple.com/artificial-general-intelligence-singularity-timing", "type": "analysis" },
+        { "title": "@ylecun on X", "url": "https://x.com/ylecun", "type": "post" }
+      ],
+      "history": []
+    }
+  ],
+  "aggregate_links": [
+    { "title": "How forecasts moved, 2023 to 2026", "url": "https://futuresearch.ai/blog/agi-timeline-tracker/", "type": "analysis" },
+    { "title": "AGI timelines dashboard", "url": "https://agi.goodheartlabs.com/", "type": "analysis" }
+  ]
+}
