@@ -277,6 +277,7 @@
     text-decoration:none;color:var(--ink);
   }
   .wg .wbtn:hover{background:var(--ink);color:var(--paper)}
+  .wg .wbtn[hidden]{display:none}
   .wg .wnote{margin-top:10px;font-size:12px;color:var(--ink3)}
   .wg code{font-family:var(--mono);font-size:12px;color:var(--ink2)}
 
@@ -1064,7 +1065,11 @@ document.querySelectorAll(".snip").forEach(w => {
 });
 
 /* ---------- widget: install prompt ---------- */
+const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent)
+  || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1); /* iPadOS */
+const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 let deferredInstall = null;
+
 addEventListener("beforeinstallprompt", e => {
   e.preventDefault();
   deferredInstall = e;
@@ -1072,14 +1077,25 @@ addEventListener("beforeinstallprompt", e => {
   $("installNote").textContent = "Installs in one step — a standalone window with its own icon.";
 });
 $("installBtn").addEventListener("click", async () => {
-  if(!deferredInstall) return;
-  deferredInstall.prompt();
-  await deferredInstall.userChoice;
-  deferredInstall = null;
-  $("installBtn").hidden = true;
+  if(deferredInstall){
+    deferredInstall.prompt();
+    await deferredInstall.userChoice;
+    deferredInstall = null;
+    $("installBtn").hidden = true;
+    return;
+  }
+  /* iOS: no install prompt API — open the share sheet, where Add to Home Screen lives */
+  if(isIOS && navigator.share){
+    navigator.share({title: "Tiresias — days until AGI", url: location.origin + location.pathname}).catch(()=>{});
+  }
 });
-if(matchMedia("(display-mode: standalone)").matches)
+if(standalone){
   $("installNote").textContent = "Already installed — you are running the app now.";
+} else if(isIOS){
+  $("installBtn").hidden = false;
+  $("installBtn").textContent = "Add to Home Screen";
+  $("installNote").innerHTML = "Opens the share sheet — scroll down and choose <b>Add to Home Screen</b>. (Or tap Safari's own share button.)";
+}
 
 /* ---------- widget: always-on-top mini clock ---------- */
 $("pipBtn").addEventListener("click", async () => {
