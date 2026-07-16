@@ -1,6 +1,6 @@
 /* Tiresias service worker — app shell cache, stale-while-revalidate. */
 "use strict";
-const VERSION = "tiresias-v2";
+const VERSION = "tiresias-v3";
 const SHELL = [
   "./",
   "index.html",

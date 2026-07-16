@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- engraving hatch patterns -->
+    <pattern id="sky" width="6" height="5" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="2.5" x2="6" y2="2.5" stroke="#1b1a17" stroke-width=".7"/>
+    </pattern>
+    <pattern id="hill" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(24)">
+      <line x1="0" y1="2.5" x2="5" y2="2.5" stroke="#1b1a17" stroke-width=".7"/>
+    </pattern>
+    <pattern id="shade" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)">
+      <line x1="0" y1="2" x2="4" y2="2" stroke="#1b1a17" stroke-width=".8"/>
+    </pattern>
+    <pattern id="cross" width="4.6" height="4.6" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="2.3" x2="4.6" y2="2.3" stroke="#1b1a17" stroke-width=".7"/>
+      <line x1="2.3" y1="0" x2="2.3" y2="4.6" stroke="#1b1a17" stroke-width=".7"/>
+    </pattern>
+    <pattern id="leaf" width="7" height="6" patternUnits="userSpaceOnUse">
+      <path d="M0 5 Q2 2 4 5 Q5.5 3 7 5" fill="none" stroke="#1b1a17" stroke-width=".8"/>
+    </pattern>
+    <pattern id="ground" width="8" height="4" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="3" x2="8" y2="3" stroke="#1b1a17" stroke-width=".6"/>
+      <line x1="1" y1="1.4" x2="5" y2="1.4" stroke="#1b1a17" stroke-width=".5"/>
+    </pattern>
+    <!-- ribbon banner paths for text -->
+    <path id="ribTop" d="M78 122 Q256 88 434 122"/>
+    <path id="ribBot" d="M88 477 Q256 510 424 477"/>
+    <path id="frameL" d="M96 388 L96 168"/>
+    <path id="frameR" d="M416 168 L416 388"/>
+  </defs>
+
+  <rect width="512" height="512" fill="#f5f4f0"/>
+
+  <!-- ============ arched window scene ============ -->
+  <clipPath id="arch">
+    <path d="M110 400 L110 190 Q110 128 160 118 Q240 100 256 74 Q272 100 352 118 Q402 128 402 190 L402 400 Z"/>
+  </clipPath>
+  <g clip-path="url(#arch)">
+    <!-- sky -->
+    <rect x="110" y="70" width="292" height="250" fill="url(#sky)" opacity=".55"/>
+    <!-- sun disc, blank halo -->
+    <circle cx="330" cy="150" r="34" fill="#f5f4f0"/>
+    <circle cx="330" cy="150" r="24" fill="none" stroke="#1b1a17" stroke-width="1.4"/>
+    <g stroke="#1b1a17" stroke-width="1">
+      <line x1="330" y1="116" x2="330" y2="106"/><line x1="330" y1="184" x2="330" y2="194"/>
+      <line x1="296" y1="150" x2="286" y2="150"/><line x1="364" y1="150" x2="374" y2="150"/>
+      <line x1="306" y1="126" x2="299" y2="119"/><line x1="354" y1="174" x2="361" y2="181"/>
+      <line x1="306" y1="174" x2="299" y2="181"/><line x1="354" y1="126" x2="361" y2="119"/>
+    </g>
+    <!-- distant hills -->
+    <path d="M110 292 Q180 258 250 288 Q320 316 402 280 L402 330 L110 330 Z" fill="url(#hill)" opacity=".5"/>
+    <path d="M110 292 Q180 258 250 288 Q320 316 402 280" fill="none" stroke="#1b1a17" stroke-width="1.6"/>
+    <!-- ground -->
+    <rect x="110" y="330" width="292" height="80" fill="url(#ground)" opacity=".85"/>
+    <path d="M110 332 Q256 322 402 332" fill="none" stroke="#1b1a17" stroke-width="1.8"/>
+
+    <!-- olive tree, left -->
+    <g>
+      <path d="M148 402 C150 350 138 320 150 282 C156 260 168 244 180 234"
+            fill="none" stroke="#1b1a17" stroke-width="7" stroke-linecap="round"/>
+      <path d="M158 402 C162 356 158 330 172 300 C180 282 198 260 214 250"
+            fill="none" stroke="#1b1a17" stroke-width="4.5" stroke-linecap="round"/>
+      <path d="M150 300 C138 292 128 288 118 288" fill="none" stroke="#1b1a17" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- foliage clumps -->
+      <g stroke="#1b1a17" stroke-width="1.8" fill="url(#leaf)">
+        <path d="M112 246 Q104 214 136 206 Q142 178 178 184 Q198 160 228 176 Q258 166 262 196 Q288 206 274 232 Q286 256 256 262 Q246 284 214 276 Q188 290 172 270 Q136 276 136 252 Q110 260 112 246 Z"/>
+      </g>
+      <!-- a falling fig — the omen -->
+      <circle cx="238" cy="288" r="5" fill="#1b1a17"/>
+    </g>
+
+    <!-- the blind seer, standing, hunched over his staff, facing left -->
+    <g>
+      <!-- staff -->
+      <line x1="300" y1="240" x2="294" y2="398" stroke="#1b1a17" stroke-width="4" stroke-linecap="round"/>
+      <!-- head in profile: brow, nose, closed eye -->
+      <path d="M326 236 Q334 228 344 232 Q354 236 354 248 Q354 254 351 258 L342 258 Q338 262 334 260 L327 254 Q330 251 327 248 Q324 244 326 236 Z"
+            fill="#f5f4f0" stroke="#1b1a17" stroke-width="2.2"/>
+      <path d="M330 246 Q334 248 338 246" fill="none" stroke="#1b1a17" stroke-width="1.4"/>
+      <!-- bald crown, hair at back -->
+      <path d="M352 240 Q358 250 356 262 Q354 272 348 278" fill="none" stroke="#1b1a17" stroke-width="2"/>
+      <!-- beard: filled mass flowing to the chest -->
+      <path d="M327 254 L334 260 Q338 262 342 258 L351 258 Q352 276 348 294 Q344 312 336 322 Q330 314 328 298 Q325 276 327 254 Z"
+            fill="#f5f4f0" stroke="#1b1a17" stroke-width="1.8"/>
+      <g fill="none" stroke="#1b1a17" stroke-width="1">
+        <path d="M332 262 Q330 284 333 304 Q334 312 336 318"/>
+        <path d="M338 262 Q336 286 340 306"/>
+        <path d="M344 260 Q343 282 345 298"/>
+        <path d="M349 260 Q350 278 347 292"/>
+      </g>
+      <!-- hunched robed body -->
+      <path d="M330 262 Q318 272 312 292 Q304 320 306 350 Q307 376 300 396 L378 396 Q382 370 376 342 Q370 312 362 292 Q356 276 352 264 Q346 284 336 286 Q330 276 330 262 Z"
+            fill="#f5f4f0" stroke="#1b1a17" stroke-width="2.4"/>
+      <!-- hunched shoulder line -->
+      <path d="M352 264 Q366 270 372 286" fill="none" stroke="#1b1a17" stroke-width="2"/>
+      <!-- robe fold hatching -->
+      <g fill="none" stroke="#1b1a17" stroke-width=".9">
+        <path d="M318 306 Q312 340 315 370 Q316 384 311 394"/>
+        <path d="M330 300 Q324 338 328 372 Q329 384 325 394"/>
+        <path d="M343 298 Q338 340 342 374 Q343 386 340 394"/>
+        <path d="M356 302 Q354 342 358 374 Q359 386 356 394"/>
+        <path d="M367 316 Q368 350 372 376 Q373 388 370 394"/>
+      </g>
+      <!-- shadow side of robe -->
+      <path d="M306 336 Q303 360 306 374 Q307 386 300 396 L318 396 Q322 376 318 354 Q314 342 312 332 Z" fill="url(#shade)" opacity=".7"/>
+      <!-- arm reaching to staff, gnarled hand -->
+      <path d="M334 292 Q320 292 310 280 Q304 272 304 262" fill="none" stroke="#1b1a17" stroke-width="2.2"/>
+      <path d="M300 254 Q306 250 310 255 Q310 261 304 263 Q299 260 300 254 Z" fill="#f5f4f0" stroke="#1b1a17" stroke-width="1.6"/>
+    </g>
+
+    <!-- foreground grass strokes -->
+    <g stroke="#1b1a17" stroke-width="1" fill="none">
+      <path d="M126 400 q3 -10 6 0"/><path d="M206 402 q3 -9 6 0"/>
+      <path d="M252 398 q3 -10 6 0"/><path d="M398 400 q-3 -10 -6 0"/>
+    </g>
+  </g>
+
+  <!-- arch frame, double rule -->
+  <path d="M110 400 L110 190 Q110 128 160 118 Q240 100 256 74 Q272 100 352 118 Q402 128 402 190 L402 400 Z"
+        fill="none" stroke="#1b1a17" stroke-width="3"/>
+  <path d="M118 394 L118 192 Q118 134 164 125 Q238 108 256 84 Q274 108 348 125 Q394 134 394 192 L394 394 Z"
+        fill="none" stroke="#1b1a17" stroke-width="1.2"/>
+  <rect x="104" y="396" width="304" height="10" fill="#f5f4f0" stroke="#1b1a17" stroke-width="2"/>
+
+  <!-- side inscriptions -->
+  <text font-family="Georgia,'Times New Roman',serif" font-size="15" letter-spacing="3.5" fill="#1b1a17">
+    <textPath href="#frameL">WHO WAS RIGHT</textPath>
+  </text>
+  <text font-family="Georgia,'Times New Roman',serif" font-size="15" letter-spacing="1.8" fill="#1b1a17">
+    <textPath href="#frameR">AND NOT BELIEVED</textPath>
+  </text>
+
+  <!-- ============ top ribbon banner ============ -->
+  <g stroke="#1b1a17" stroke-width="2.4" fill="#f5f4f0">
+    <!-- left tail -->
+    <path d="M74 96 L34 76 L52 100 L34 126 L80 128 Q72 112 74 96 Z"/>
+    <!-- right tail -->
+    <path d="M438 96 L478 76 L460 100 L478 126 L432 128 Q440 112 438 96 Z"/>
+    <!-- main scroll -->
+    <path d="M74 96 Q256 58 438 96 L432 128 Q256 92 80 128 Z"/>
+  </g>
+  <g stroke="#1b1a17" stroke-width="1" fill="none">
+    <path d="M80 128 L86 138 L96 126"/>
+    <path d="M432 128 L426 138 L416 126"/>
+  </g>
+  <text font-family="Georgia,'Times New Roman',serif" font-size="42" font-weight="bold" letter-spacing="10" fill="#1b1a17" text-anchor="middle">
+    <textPath href="#ribTop" startOffset="50%">TIRESIAS</textPath>
+  </text>
+
+  <!-- ============ bottom ribbon banner ============ -->
+  <g stroke="#1b1a17" stroke-width="2.4" fill="#f5f4f0">
+    <path d="M84 452 L44 438 L60 462 L44 484 L88 484 Q82 468 84 452 Z"/>
+    <path d="M428 452 L468 438 L452 462 L468 484 L424 484 Q430 468 428 452 Z"/>
+    <path d="M84 452 Q256 486 428 452 L424 484 Q256 518 88 484 Z"/>
+  </g>
+  <text font-family="Georgia,'Times New Roman',serif" font-size="23" letter-spacing="5" fill="#1b1a17" text-anchor="middle">
+    <textPath href="#ribBot" startOffset="50%">SEER OF THEBES</textPath>
+  </text>
+</svg>
