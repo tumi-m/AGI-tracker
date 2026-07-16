@@ -3,32 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AGI Countdown — embed</title>
+<title>Tiresias — days until AGI (embed)</title>
 <meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f5f4f0'/%3E%3Ccircle cx='32' cy='23' r='12' fill='%231b1a17'/%3E%3Cpath d='M18 31 C18 45 23 54 32 58 C41 54 46 45 46 31 C42 36 37 38.5 32 38.5 C27 38.5 22 36 18 31 Z' fill='%231b1a17'/%3E%3C/svg%3E">
 <style>
   :root{
-    --bg:#05060a; --surface:#0e1118; --border:#1c2131;
-    --ink:#e8ebf2; --ink2:#9aa3b8; --ink3:#5c6478; --accent:#5eead4;
+    --bg:#f5f4f0; --surface:#fbfaf7; --border:#e2e0d8;
+    --ink:#1b1a17; --ink2:#605e57; --ink3:#96938a; --accent:#e05205;
     --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
   }
-  html[data-theme="light"]{
-    --bg:#f7f8fa; --surface:#ffffff; --border:#dfe3ea;
-    --ink:#12141c; --ink2:#4b5265; --ink3:#8a92a6; --accent:#0d9488;
+  html[data-theme="dark"]{
+    --bg:#161512; --surface:#22211d; --border:#35332d;
+    --ink:#f2f0e9; --ink2:#a8a498; --ink3:#7d7a70; --accent:#f0742e;
   }
   html[data-transparent="1"]{--bg:transparent;--surface:transparent;--border:transparent}
   *{margin:0;padding:0;box-sizing:border-box}
   body{
     background:var(--bg);color:var(--ink);
-    font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+    font-family:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;
     min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
     padding:14px;overflow:hidden;
   }
   .clock{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
   .cu{
-    background:var(--surface);border:1px solid var(--border);border-radius:8px;
+    background:var(--surface);border:1px solid var(--border);
     min-width:74px;padding:10px 10px 8px;text-align:center;
   }
-  .cu b{display:block;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(20px,6vw,30px);font-weight:700;line-height:1.1}
+  .cu b{display:block;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(20px,6vw,30px);font-weight:500;line-height:1.1;letter-spacing:-.02em}
   .cu small{color:var(--ink3);font-size:9px;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
   .cu.days b{color:var(--accent)}
   .meta{color:var(--ink2);font-size:11px;margin-top:10px;text-align:center;letter-spacing:.02em}
@@ -55,7 +56,7 @@
 <div class="wrap">
   <div class="clock" id="clock"></div>
   <p class="meta" id="meta"></p>
-  <a class="attr" href="https://agitracker.io/" target="_blank" rel="noopener" id="attr">agitracker.io</a>
+  <a class="attr" href="https://tiresias.io/" target="_blank" rel="noopener" id="attr">tiresias.io</a>
 </div>
 <script>
 "use strict";
@@ -82,7 +83,7 @@ const srcId = q.get("source") && T[q.get("source")] ? q.get("source") : "agg";
 const target = srcId==="agg" ? AGG : ts(T[srcId][1]);
 const name = srcId==="agg" ? "expert median" : T[srcId][0];
 
-if(q.get("theme")==="light") document.documentElement.dataset.theme = "light";
+if(q.get("theme")==="dark") document.documentElement.dataset.theme = "dark";
 if(q.get("transparent")==="1") document.documentElement.dataset.transparent = "1";
 if(q.get("compact")==="1") document.body.classList.add("compact");
 

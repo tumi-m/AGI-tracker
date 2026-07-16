@@ -2,7 +2,7 @@
 
 A live, embeddable countdown to artificial general intelligence — a national-debt-clock for the AI era. One transparent data layer (named expert forecasts + prediction-market medians), many surfaces: the site, an iframe embed, a script widget, badges, and a JSON dataset.
 
-Built for developers, engineers, AI researchers and enthusiasts: minimal, dark, dense with live numbers, zero dependencies, zero build step.
+Built for developers, engineers, AI researchers and enthusiasts: minimal, Rams-plain, dense with live numbers, zero dependencies, zero build step.
 
 ## What is in here
 
@@ -33,7 +33,7 @@ Deploy by pointing GitHub Pages, Cloudflare Pages, Vercel or Netlify at the repo
 **iframe** (blogs, Substack, WordPress, Webflow, OBS overlays):
 
 ```html
-<iframe src="https://agitracker.io/embed?source=agg&theme=dark&units=days,hrs,min,sec"
+<iframe src="https://tiresias.io/embed?source=agg&theme=light&units=days,hrs,min,sec"
         width="100%" height="180" frameborder="0" title="AGI Countdown"></iframe>
 ```
 
@@ -43,7 +43,7 @@ Params: `source` (agg, amodei, aschenbrenner, altman, manifold, metaculus-weak, 
 
 ```html
 <div data-agi-tracker data-source="amodei" data-units="days,hrs"></div>
-<script async src="https://agitracker.io/widget.js"></script>
+<script async src="https://tiresias.io/widget.js"></script>
 ```
 
 **Data** — fetch `data/forecasts.json` once, compute the countdown locally. The target date changes rarely; clients need no polling.

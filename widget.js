@@ -1,8 +1,8 @@
 /*!
- * AGI Tracker — script embed
+ * Tiresias — script embed
  * Usage:
  *   <div data-agi-tracker data-source="agg" data-units="days,hrs"></div>
- *   <script async src="https://agitracker.io/widget.js"></script>
+ *   <script async src="https://tiresias.io/widget.js"></script>
  *
  * data-source : agg | amodei | aschenbrenner | altman | manifold |
  *               metaculus-weak | kokotajlo | hassabis | polymarket |
@@ -11,7 +11,7 @@
  * data-label  : 0 to hide the "until AGI" label (attribution stays)
  *
  * The widget inherits the host page's font. Targets mirror
- * https://agitracker.io/data/forecasts.json (the canonical dataset).
+ * https://tiresias.io/data/forecasts.json (the canonical dataset).
  */
 (function () {
   "use strict";
@@ -66,9 +66,9 @@
       el.appendChild(lab);
     }
     var attr = document.createElement("a");
-    attr.href = "https://agitracker.io/?source=" + srcId;
+    attr.href = "https://tiresias.io/?source=" + srcId;
     attr.target = "_blank"; attr.rel = "noopener";
-    attr.textContent = "agitracker.io";
+    attr.textContent = "tiresias.io";
     attr.style.cssText = "font-size:.6em;opacity:.45;text-decoration:none;color:inherit;letter-spacing:.06em;";
     el.appendChild(attr);
 
