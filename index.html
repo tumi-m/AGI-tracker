@@ -92,33 +92,47 @@
   .sub{font-family:var(--mono);font-size:15px;color:var(--ink2);font-variant-numeric:tabular-nums}
   .sub b{color:var(--ink);font-weight:500}
 
+  /* shared panel footer buttons */
+  .pfoot{display:flex;gap:12px;margin-top:24px}
+  .pfoot button{flex:1;cursor:pointer;transition:.14s}
+
   /* mode: flap (split-flap departure board) */
-  .flap{background:#23221e;border-radius:12px;padding:34px 36px;color:#efede4;box-shadow:0 18px 44px rgba(27,26,23,.18)}
-  .flap .fl-cap{font:500 11px var(--mono);letter-spacing:.3em;color:#a8a498;margin-bottom:20px}
+  .flap{background:#242320;border-radius:16px;padding:30px 34px 26px;color:#efede4;box-shadow:0 18px 44px rgba(27,26,23,.22);text-align:center;max-width:680px}
+  .flap .fl-cap{font:500 10px var(--mono);letter-spacing:.3em;color:#a8a498;margin-bottom:22px;text-transform:uppercase}
+  .fl-days{display:flex;justify-content:center;gap:8px}
   .tile{
-    display:inline-block;background:#131210;color:#f4f2ea;border-radius:.1em;
-    font:600 clamp(44px,7vw,84px)/1.22 var(--mono);padding:.06em .16em;margin-right:.07em;
+    display:inline-block;background:#131210;color:#f4f2ea;border-radius:10px;
+    font:600 clamp(44px,7vw,80px)/1.25 var(--mono);padding:.05em .18em;
     position:relative;overflow:hidden;font-variant-numeric:tabular-nums;
   }
   .tile::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(0,0,0,.65)}
-  .tile.small{font-size:clamp(19px,2.4vw,28px)}
+  .tile.small{font-size:clamp(19px,2.4vw,28px);border-radius:6px}
   .tile.tick{animation:flip .3s ease-out}
   @keyframes flip{0%{transform:rotateX(-88deg)}100%{transform:rotateX(0)}}
-  .fl-time{margin-top:20px;display:flex;gap:22px;align-items:baseline;flex-wrap:wrap}
+  .fl-time{margin-top:18px;display:flex;justify-content:center;gap:22px;align-items:baseline;flex-wrap:wrap}
   .fl-time .cap{color:#7d7a70;letter-spacing:.22em;margin-right:2px}
+  .fl-btn{background:#35332e;border:1px solid #35332e;border-radius:10px;color:#d8d5cb;font:600 11px var(--sans);letter-spacing:.2em;padding:13px;text-transform:uppercase}
+  .fl-btn.alt{background:none;color:#a8a498}
+  .fl-btn:hover{background:#403d37;color:#efede4}
 
-  /* mode: led (digital alarm clock) */
-  .led{background:#0d0c0b;border-radius:14px;padding:32px 36px 28px;border:1px solid #262320;box-shadow:0 18px 44px rgba(27,26,23,.2)}
-  .led .ld-cap{font:500 10px var(--mono);letter-spacing:.34em;color:#7e2a1c;margin-bottom:16px}
-  .led svg{display:block;width:100%;max-width:560px;height:auto;filter:drop-shadow(0 0 7px rgba(255,45,30,.45))}
+  /* mode: led (digital alarm clock, cased) */
+  .led{background:#2b2b2e;border-radius:22px;padding:16px;box-shadow:0 22px 50px rgba(0,0,0,.3);max-width:680px}
+  .led-in{background:#0a0a0a;border-radius:12px;padding:20px 26px 22px;text-align:center}
+  .led-head{display:flex;justify-content:space-between;align-items:baseline;font:600 10px var(--mono);letter-spacing:.28em;margin-bottom:14px}
+  .led-head span{color:#5c1d12}
+  .led-head .lit{color:#ff3b30;text-shadow:0 0 8px rgba(255,45,30,.5)}
+  .led svg{display:block;width:100%;max-width:400px;margin:0 auto;height:auto;filter:drop-shadow(0 0 7px rgba(255,45,30,.45))}
   .led .seg{fill:#ff2d1e}
   .led .off{fill:#ff2d1e;fill-opacity:.06}
-  .led .ld-sub{margin-top:14px;font:500 11px var(--mono);letter-spacing:.2em;color:#6e2318}
+  .led-btn{background:#3a3a3e;border:none;border-radius:9px;color:#cfd0d4;font:600 11px var(--mono);letter-spacing:.26em;padding:13px}
+  .led-btn:hover{background:#47474c;color:#fff}
+  .led .pfoot{margin-top:16px}
 
-  /* mode: hud (a certain red-eyed endoskeleton) */
+  /* mode: hud (hunter-killer chronometer) */
   .hud{
-    position:relative;background:#0b0505;border-radius:10px;padding:38px 40px 30px;
-    color:#ff3b30;font-family:var(--mono);overflow:hidden;box-shadow:0 18px 44px rgba(27,26,23,.2);
+    position:relative;background:#0b0505;border-radius:8px;padding:34px 38px 28px;
+    color:#ff3b30;font-family:var(--mono);overflow:hidden;box-shadow:0 18px 44px rgba(27,26,23,.25);
+    text-align:center;max-width:680px;
   }
   .hud::before{
     content:"";position:absolute;inset:0;pointer-events:none;
@@ -129,45 +143,73 @@
   .hud .cb.tr{top:10px;right:10px;border-left:0;border-bottom:0}
   .hud .cb.bl{bottom:10px;left:10px;border-right:0;border-top:0}
   .hud .cb.br{bottom:10px;right:10px;border-left:0;border-top:0}
-  .hud .hd-l1{font-size:11px;letter-spacing:.26em;color:rgba(255,59,48,.75)}
+  .hud .hd-l1{font-size:12px;font-weight:700;letter-spacing:.2em;color:#ff3b30}
+  .hud .hd-l2{font-size:10px;letter-spacing:.18em;color:rgba(255,59,48,.55);margin-top:6px}
   .hud .hd-days{
-    font-size:clamp(72px,11vw,148px);font-weight:600;line-height:1.05;letter-spacing:-.01em;
-    text-shadow:0 0 18px rgba(255,59,48,.55);font-variant-numeric:tabular-nums;
+    font-size:clamp(64px,10vw,124px);font-weight:700;line-height:1.1;letter-spacing:.01em;
+    text-shadow:0 0 18px rgba(255,59,48,.55);font-variant-numeric:tabular-nums;margin:14px 0 4px;
   }
-  .hud .hd-row{display:flex;gap:14px;margin:14px 0 18px;flex-wrap:wrap}
-  .hud .hd-cell{border:1px solid rgba(255,59,48,.45);padding:8px 14px;font-size:15px;font-variant-numeric:tabular-nums}
+  .hud .hd-cap{font-size:10px;letter-spacing:.34em;color:rgba(255,59,48,.7)}
+  .hud .hd-row{display:flex;justify-content:center;gap:14px;margin:18px 0 0;flex-wrap:wrap}
+  .hud .hd-cell{border:1px solid rgba(255,59,48,.45);padding:8px 16px;font-size:15px;font-variant-numeric:tabular-nums}
   .hud .hd-cell i{font-style:normal;display:block;font-size:9px;letter-spacing:.24em;color:rgba(255,59,48,.6)}
-  .hud .hd-tel{font-size:10.5px;letter-spacing:.14em;line-height:1.9;color:rgba(255,59,48,.62)}
+  .hd-btn{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.6);color:#ff3b30;font:600 11px var(--mono);letter-spacing:.24em;padding:12px}
+  .hd-btn:hover{background:rgba(255,59,48,.16)}
   @keyframes hudflk{0%,91%,94%,100%{opacity:1}92%{opacity:.86}93%{opacity:.96}}
   .hud.flk{animation:hudflk 7s steps(1) infinite}
 
-  /* mode: dial (host diagnostics) */
+  /* mode: dial (host diagnostic) */
   .dial{
-    background:#fdfcf8;border:1px solid var(--line);border-radius:12px;padding:30px;
-    display:flex;align-items:center;justify-content:center;box-shadow:0 14px 36px rgba(27,26,23,.07);
+    background:#fdfcf8;border:1px solid var(--line);border-radius:4px;padding:30px 30px 26px;
+    text-align:center;box-shadow:0 14px 36px rgba(27,26,23,.07);max-width:680px;
   }
-  .dial svg{display:block;width:min(340px,78vw);height:auto}
+  .dial .dl-top{font:500 10px var(--sans);letter-spacing:.4em;color:var(--ink2);text-transform:uppercase;margin-bottom:14px}
+  .dial svg{display:block;width:min(320px,74vw);height:auto;margin:0 auto}
   .dial .dl-num{font-family:var(--serif);font-weight:400;letter-spacing:-.01em}
   .dial .dl-cap{font:500 8.5px var(--sans);letter-spacing:.34em;fill:var(--ink2)}
-  .dial .dl-quote{font-family:var(--serif);font-style:italic;font-size:10.5px;fill:var(--ink3)}
+  .dial .dl-ctl{display:flex;justify-content:center;gap:36px;margin-top:20px}
+  .dl-btn{background:none;border:none;padding:2px 0;font:500 11px var(--sans);letter-spacing:.28em;color:var(--ink2);border-bottom:1px solid var(--ink);text-transform:uppercase}
+  .dl-btn.alt{color:var(--ink3);border-bottom-color:var(--line2)}
+  .dl-btn:hover{color:var(--ink)}
+  .dial .dl-quote{margin-top:18px;font-family:var(--serif);font-style:italic;font-size:11px;color:var(--ink3)}
   .spin{transform-origin:170px 170px;animation:spin 80s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
 
-  /* mode: gram (sense offense) */
-  .gram{
-    position:relative;background:#101011;border-radius:8px;padding:44px 40px;color:#eceae4;overflow:hidden;
-    box-shadow:0 18px 44px rgba(27,26,23,.2);
+  /* mode: gram (interval control) */
+  .gram{background:#f2f1ec;border:1px solid #141317;color:#141317;overflow:hidden;padding:0;box-shadow:0 18px 44px rgba(27,26,23,.16);max-width:680px}
+  .gm-bar{display:flex;justify-content:space-between;align-items:baseline;background:#141317;color:#f2f1ec;padding:13px 20px}
+  .gm-bar b{font:700 12px var(--sans);letter-spacing:.28em}
+  .gm-bar span{font:500 10px var(--sans);letter-spacing:.22em;color:#9b99a2}
+  .gm-body{padding:34px 24px 30px;text-align:center}
+  .gm-cap{font-size:10px;letter-spacing:.36em;color:#6f6d75;text-transform:uppercase}
+  .gm-num{font:800 clamp(56px,9vw,104px)/1.05 var(--sans);letter-spacing:-.01em;margin:14px 0 8px;font-variant-numeric:tabular-nums}
+  .gm-hms{font:600 15px var(--mono);letter-spacing:.14em;font-variant-numeric:tabular-nums;margin-bottom:14px}
+  .gm-sub{font-size:9.5px;letter-spacing:.3em;color:#6f6d75;text-transform:uppercase}
+  .gm-foot{display:flex;border-top:1px solid #141317}
+  .gm-btn{flex:1;padding:15px 8px;font:700 11px var(--sans);letter-spacing:.26em;text-transform:uppercase;border:none;cursor:pointer;transition:.14s}
+  .gm-btn.dark{background:#141317;color:#f2f1ec}
+  .gm-btn.dark:hover{background:#2a2930}
+  .gm-btn.light{background:#f2f1ec;color:#141317;border-left:1px solid #141317}
+  .gm-btn.light:hover{background:#e6e4dd}
+
+  /* mode: tminus (launch control) */
+  .tmx{background:#0f1320;border:1px solid #242c42;border-radius:10px;padding:24px 28px 24px;color:#e8ecf5;box-shadow:0 18px 44px rgba(10,14,26,.4);max-width:680px}
+  .tm-head{display:flex;justify-content:space-between;align-items:center;gap:12px;font:600 11px var(--mono);letter-spacing:.2em;color:#8b93a7;text-transform:uppercase}
+  .tm-chip{flex:none;border:1px solid #57d777;color:#57d777;padding:4px 11px;font:700 10px var(--mono);letter-spacing:.2em;border-radius:4px}
+  .tm-chip.hold{border-color:#e0a04a;color:#e0a04a}
+  .tm-num{
+    font:700 clamp(28px,4.4vw,58px)/1.15 var(--mono);letter-spacing:.02em;text-align:center;
+    margin:20px 0 16px;color:#f2f5fb;font-variant-numeric:tabular-nums;
+    text-shadow:0 0 26px rgba(130,150,255,.28);white-space:nowrap;
   }
-  .gram::before,.gram::after{content:"";position:absolute;background:rgba(236,234,228,.13)}
-  .gram::before{left:50%;top:0;bottom:0;width:1px}
-  .gram::after{top:50%;left:0;right:0;height:1px}
-  .gram .gm-cap{text-align:center;font-size:10px;letter-spacing:.42em;color:#8d8b84;margin-bottom:30px;text-transform:uppercase}
-  .gram .gm-grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  @media(max-width:640px){.gram .gm-grid{grid-template-columns:repeat(2,1fr)}}
-  .gram .gm-cell{border:1px solid rgba(236,234,228,.5);padding:18px 8px 14px;text-align:center}
-  .gram .gm-cell b{display:block;font:600 clamp(30px,4.6vw,52px)/1 var(--sans);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
-  .gram .gm-cell i{font-style:normal;display:block;margin-top:10px;font-size:9px;letter-spacing:.4em;color:#8d8b84}
-  .gram .gm-foot{text-align:center;margin-top:28px;font-size:9.5px;letter-spacing:.3em;color:#5f5d57;text-transform:uppercase}
+  .tm-track{height:4px;background:#242c42;border-radius:2px;position:relative;overflow:hidden}
+  .tm-track i{position:absolute;left:0;top:0;bottom:0;width:0;background:#57d777;border-radius:2px}
+  .tm-marks{display:flex;justify-content:space-between;font:500 9px var(--mono);letter-spacing:.2em;color:#5c6478;margin-top:8px}
+  .tm-btn{padding:13px;font:700 11px var(--mono);letter-spacing:.2em;border-radius:6px;text-transform:uppercase}
+  .tm-btn.go{background:#57d777;border:1px solid #57d777;color:#0b1a10}
+  .tm-btn.go:hover{background:#74e392}
+  .tm-btn.alt{background:none;border:1px solid #2c3550;color:#aab3c7}
+  .tm-btn.alt:hover{border-color:#57d777;color:#e8ecf5}
 
   /* sections */
   section{padding:64px 0;border-bottom:1px solid var(--line)}
@@ -383,6 +425,7 @@
           <button class="vbtn" data-v="hud"  title="A certain red-eyed endoskeleton">HUD</button>
           <button class="vbtn" data-v="dial" title="Host diagnostics">DIAL</button>
           <button class="vbtn" data-v="gram" title="Sense offense">GRAM</button>
+          <button class="vbtn" data-v="tminus" title="Terminal count, pad 39A">LAUNCH</button>
         </div>
       </div>
     </div>
@@ -679,11 +722,15 @@ const VIEWS = {
     build: () => `
       <div class="flap">
         <p class="fl-cap"><span data-t="label"></span></p>
-        <div id="flapD" aria-hidden="true"></div>
+        <div class="fl-days" id="flapD" aria-hidden="true"></div>
         <div class="fl-time">
           <span><span class="cap">HRS</span> <span class="tile small" data-fl="h">00</span></span>
           <span><span class="cap">MIN</span> <span class="tile small" data-fl="m">00</span></span>
           <span><span class="cap">SEC</span> <span class="tile small" data-fl="s">00</span></span>
+        </div>
+        <div class="pfoot">
+          <button class="fl-btn" data-act="next">Next source</button>
+          <button class="fl-btn alt" data-act="median">Median</button>
         </div>
       </div>`,
     update(st){
@@ -702,38 +749,48 @@ const VIEWS = {
   },
   led:{
     build(){
-      let dsvg = `<svg viewBox="0 0 560 150" role="img" aria-label="LED countdown">`;
-      for(let i=0;i<4;i++) dsvg += segDigit(14 + i*76, 8, 1, i);          /* days, big */
-      for(let i=0;i<2;i++) dsvg += segDigit(338 + i*40, 62, .48, 4+i);    /* HH */
-      dsvg += `<circle class="seg" data-b="1" cx="428" cy="82" r="4"/><circle class="seg" data-b="1" cx="428" cy="102" r="4"/>`;
-      for(let i=0;i<2;i++) dsvg += segDigit(442 + i*40, 62, .48, 6+i);    /* MM */
-      dsvg += `<text x="338" y="42" fill="#7e2a1c" font-family="var(--mono)" font-size="13" letter-spacing="4">DAYS</text>`;
+      let dsvg = `<svg viewBox="0 0 332 182" role="img" aria-label="LED countdown">`;
+      for(let i=0;i<4;i++) dsvg += segDigit(22 + i*76, 8, 1, i);           /* days */
+      const tx = [51,85,135,169,219,253];                                  /* HH MM SS */
+      for(let i=0;i<6;i++) dsvg += segDigit(tx[i], 124, .45, 4+i);
+      dsvg += `<circle class="seg" data-b="1" cx="123" cy="140" r="3.4"/><circle class="seg" data-b="1" cx="123" cy="156" r="3.4"/>`;
+      dsvg += `<circle class="seg" data-b="1" cx="207" cy="140" r="3.4"/><circle class="seg" data-b="1" cx="207" cy="156" r="3.4"/>`;
       dsvg += `</svg>`;
-      return `<div class="led"><p class="ld-cap">TIRESIAS · <span data-t="label"></span></p>${dsvg}
-        <p class="ld-sub" id="ldSec">SEC 00</p></div>`;
+      return `<div class="led"><div class="led-in">
+        <div class="led-head"><span>TIMER</span><span class="lit">DAYS UNTIL AGI</span><span>SNOOZE</span></div>
+        ${dsvg}
+        <div class="pfoot">
+          <button class="led-btn" data-act="next">SOURCE</button>
+          <button class="led-btn" data-act="median">MEDIAN</button>
+        </div>
+      </div></div>`;
     },
     update(st){
       const root = document.querySelector(".led svg");
       st.d4.split("").forEach((c,i) => segSet(root, i, c));
-      segSet(root, 4, st.h[0]); segSet(root, 5, st.h[1]);
-      segSet(root, 6, st.m[0]); segSet(root, 7, st.m[1]);
+      const t = st.h + st.m + st.s;
+      for(let i=0;i<6;i++) segSet(root, 4+i, t[i]);
       const blink = (+st.s % 2) === 0 || reduceMotion ? 1 : .12;
       root.querySelectorAll("[data-b]").forEach(c => c.setAttribute("fill-opacity", blink));
-      $("ldSec").textContent = "SEC " + st.s;
     }
   },
   hud:{
     build: () => `
       <div class="hud ${reduceMotion ? "" : "flk"}">
         <span class="cb tl"></span><span class="cb tr"></span><span class="cb bl"></span><span class="cb br"></span>
-        <p class="hd-l1">SCAN MODE // TARGET: GENERAL INTELLIGENCE</p>
+        <p class="hd-l1">SYS//TIRESIAS CHRONOMETER v2.4</p>
+        <p class="hd-l2">ANALYSIS: TIMELINE DISPUTED &nbsp;·&nbsp; SOURCE: <span data-t="src"></span></p>
         <p class="hd-days"><span data-t="days">0</span></p>
+        <p class="hd-cap">TIME TO GENERAL INTELLIGENCE — DAYS</p>
         <div class="hd-row">
           <span class="hd-cell"><i>HRS</i><span data-t="h">00</span></span>
           <span class="hd-cell"><i>MIN</i><span data-t="m">00</span></span>
           <span class="hd-cell"><i>SEC</i><span data-t="s">00</span></span>
         </div>
-        <p class="hd-tel">SOURCE: <span data-t="src"></span><br>ANALYSIS: TIMELINE DISPUTED · N=10 · MEDIAN RECOMPUTED AT LOAD<br>DIRECTIVE: OBSERVE. REPORT. DO NOT INTERVENE.</p>
+        <div class="pfoot">
+          <button class="hd-btn" data-act="next">NEXT TARGET</button>
+          <button class="hd-btn" data-act="median">RESET MEDIAN</button>
+        </div>
       </div>`,
     update(){}
   },
@@ -751,7 +808,9 @@ const VIEWS = {
         const rA = R - (big ? 10 : 5), rB = R;
         ticks += `<line x1="${C+rA*Math.cos(a)}" y1="${C+rA*Math.sin(a)}" x2="${C+rB*Math.cos(a)}" y2="${C+rB*Math.sin(a)}" stroke="var(--ink3)" stroke-width="${big?1.2:.6}"/>`;
       }
-      return `<div class="dial"><svg viewBox="0 0 340 372" role="img" aria-label="Dial countdown">
+      return `<div class="dial">
+        <p class="dl-top">Host diagnostic — narrative loop</p>
+        <svg viewBox="0 0 340 340" role="img" aria-label="Dial countdown">
         <circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="var(--ink2)" stroke-width="1"/>
         <circle class="${reduceMotion?"":"spin"}" cx="${C}" cy="${C}" r="134" fill="none" stroke="var(--line2)" stroke-width="1" stroke-dasharray="1 7"/>
         ${ticks}
@@ -761,8 +820,13 @@ const VIEWS = {
         <text class="dl-num" x="${C}" y="${C+2}" text-anchor="middle" font-size="64" fill="var(--ink)"><tspan data-t="days">0</tspan></text>
         <text class="dl-cap" x="${C}" y="${C+34}" text-anchor="middle">DAYS REMAINING</text>
         <text class="dl-cap" x="${C}" y="${C+52}" text-anchor="middle" style="fill:var(--ink3)"><tspan data-t="hms"></tspan></text>
-        <text class="dl-quote" x="${C}" y="356" text-anchor="middle">"These violent delights have violent ends."</text>
-      </svg></div>`;
+        </svg>
+        <div class="dl-ctl">
+          <button class="dl-btn" data-act="next">Next host</button>
+          <button class="dl-btn alt" data-act="median">Median</button>
+        </div>
+        <p class="dl-quote">"These violent delights have violent ends."</p>
+      </div>`;
     },
     update(st){
       const el = document.querySelector('.dial [data-t="hms"]');
@@ -772,16 +836,45 @@ const VIEWS = {
   gram:{
     build: () => `
       <div class="gram">
-        <p class="gm-cap">Interval to emergence · <span data-t="src"></span></p>
-        <div class="gm-grid">
-          <div class="gm-cell"><b data-t="days">0</b><i>DAYS</i></div>
-          <div class="gm-cell"><b data-t="h">00</b><i>HOURS</i></div>
-          <div class="gm-cell"><b data-t="m">00</b><i>MINUTES</i></div>
-          <div class="gm-cell"><b data-t="s">00</b><i>SECONDS</i></div>
+        <div class="gm-bar"><b>INTERVAL CONTROL</b><span>GRADE EC-10</span></div>
+        <div class="gm-body">
+          <p class="gm-cap">Interval to emergence · <span data-t="src"></span></p>
+          <p class="gm-num"><span data-t="days">0</span></p>
+          <p class="gm-hms"><span data-t="h">00</span>:<span data-t="m">00</span>:<span data-t="s">00</span></p>
+          <p class="gm-sub">Feeling is a crime · Remain calm</p>
         </div>
-        <p class="gm-foot">Librium standard time · Deviation will be noted</p>
+        <div class="gm-foot">
+          <button class="gm-btn dark" data-act="next">Next dose</button>
+          <button class="gm-btn light" data-act="median">Median</button>
+        </div>
       </div>`,
     update(){}
+  },
+  tminus:{
+    build: () => `
+      <div class="tmx">
+        <div class="tm-head">
+          <span>TIME TO AGI · <span data-t="src"></span></span>
+          <span class="tm-chip" id="tmChip">COUNTING</span>
+        </div>
+        <p class="tm-num">T&#8722;<span data-t="dpad">0000</span>:<span data-t="h">00</span>:<span data-t="m">00</span>:<span data-t="s">00</span></p>
+        <div class="tm-track"><i id="tmFill"></i></div>
+        <div class="tm-marks"><span>HOLD</span><span>TERMINAL COUNT</span><span>IGNITION</span></div>
+        <div class="pfoot">
+          <button class="tm-btn go" data-act="next">Next source</button>
+          <button class="tm-btn alt" data-act="median">Scrub to median</button>
+        </div>
+      </div>`,
+    update(st){
+      const EPOCH = ts("2026-01-01");
+      const frac = Math.max(0, Math.min(1, (Date.now()-EPOCH) / (target()-EPOCH || 1)));
+      const fill = $("tmFill"); if(fill) fill.style.width = (frac*100).toFixed(2) + "%";
+      const chip = $("tmChip");
+      if(chip){
+        chip.textContent = st.gone ? "HOLD" : "COUNTING";
+        chip.classList.toggle("hold", st.gone);
+      }
+    }
   }
 };
 
@@ -802,6 +895,15 @@ function setView(v, push){
 }
 document.querySelectorAll(".vbtn").forEach(b => b.addEventListener("click", () => setView(b.dataset.v)));
 
+/* panel footer controls — left cycles the source, right resets to the median */
+$("stage").addEventListener("click", e => {
+  const b = e.target.closest("[data-act]");
+  if(!b) return;
+  if(b.dataset.act === "median"){ pick("agg"); return; }
+  const order = ["agg"].concat([...FORECASTS].sort((a,b)=>ts(a.date)-ts(b.date)).map(f => f.id));
+  pick(order[(order.indexOf(current) + 1) % order.length]);
+});
+
 /* ---------- generic tick ---------- */
 function tick(){
   const st = calc();
@@ -811,6 +913,7 @@ function tick(){
       case "label": el.textContent = labelTxt(); break;
       case "src": el.textContent = srcName(); break;
       case "days": el.textContent = st.gone ? "0" : st.d.toLocaleString(); break;
+      case "dpad": el.textContent = st.gone ? "0000" : st.d4; break;
       case "h": el.textContent = st.h; break;
       case "m": el.textContent = st.m; break;
       case "s": el.textContent = st.s; break;
