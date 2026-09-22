@@ -129,6 +129,51 @@
   .sg-key i{width:12px;height:2.5px;border-radius:2px}
   .sig .fine{margin-top:16px}
 
+  /* model tables */
+  .tnote{font-size:13px;color:var(--ink2);max-width:66ch;margin-bottom:22px}
+  .tnote b{color:var(--ink);font-weight:600}
+  .tscroll{overflow-x:auto}
+  .btab{width:100%;border-collapse:collapse;min-width:760px}
+  .btab caption{text-align:left;font-size:13px;font-weight:600;padding-bottom:14px}
+  .btab caption span{color:var(--ink3);font-weight:400;font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+  .btab th{
+    text-align:left;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--ink2);font-weight:500;padding:0 10px 10px;border-bottom:1px solid var(--ink);white-space:nowrap;
+  }
+  .btab th small{display:block;letter-spacing:.04em;text-transform:none;color:var(--ink3);font-size:10px;font-weight:400}
+  .btab th.r{text-align:right}
+  .btab td{padding:12px 10px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle}
+  .btab td.r{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px}
+  .btab tbody tr:hover td{background:var(--card)}
+  .btab td:first-child,.btab th:first-child{padding-left:0}
+  .btab td:last-child,.btab th:last-child{padding-right:0}
+  .m-name{font-weight:600;white-space:nowrap}
+  .m-org{display:block;color:var(--ink3);font-size:11.5px;font-weight:400}
+  .wtag{
+    font:500 9.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;
+    border:1px solid var(--line2);padding:2px 7px;color:var(--ink2);white-space:nowrap;
+  }
+  .wtag.open{border-color:var(--teal);color:var(--teal)}
+  .bcell{display:flex;align-items:center;justify-content:flex-end;gap:9px}
+  .bbar{width:44px;height:4px;background:var(--line);position:relative;flex:none}
+  .bbar i{position:absolute;left:0;top:0;bottom:0;background:var(--accent)}
+  .bbar.t i{background:var(--teal)}
+  tr.pend td{color:var(--ink3)}
+  tr.pend .m-name{color:var(--ink2)}
+  .pendtag{font:500 9.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent-text);white-space:nowrap}
+
+  /* intelligence per dollar */
+  .vchart{margin-top:10px}
+  .vrow{display:grid;grid-template-columns:minmax(120px,168px) 1fr 84px;gap:14px;align-items:center;padding:6px 0}
+  @media(max-width:640px){.vrow{grid-template-columns:110px 1fr 64px;gap:8px}}
+  .vrow .vn{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .vrow .vn i{font-style:normal;color:var(--ink3);font-size:11px}
+  .vbar{height:15px;background:var(--line);position:relative}
+  .vbar i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);transition:width .6s cubic-bezier(.2,.7,.2,1)}
+  .vbar.t i{background:var(--teal)}
+  .vrow .vv{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12.5px;text-align:right;color:var(--ink2)}
+  @media(prefers-reduced-motion:reduce){.vbar i{transition:none}}
+
   /* library */
   .lib{display:grid;grid-template-columns:repeat(3,1fr);gap:64px}
   @media(max-width:960px){.lib{grid-template-columns:1fr;gap:48px}}
@@ -253,9 +298,13 @@
     <div class="sig-grid">
       <div class="sig">
         <h3>Training compute, frontier models</h3>
-        <p class="sg-sub">A billionfold increase in thirteen years — a doubling roughly every six months. Log scale: each gridline is 100× the one below.</p>
+        <p class="sg-sub">A billionfold increase in fourteen years — a doubling roughly every six months. Open-weight models run the same curve about eighteen months behind. Log scale: each gridline is 100× the one below.</p>
         <div class="sg-box" id="chCompute"></div>
-        <p class="fine">Approximate public estimates of total training compute (FLOP), after Epoch AI. Points are representative frontier systems, not a complete census.</p>
+        <div class="sg-key" aria-hidden="true">
+          <span><i style="background:var(--accent)"></i>Closed frontier</span>
+          <span><i style="background:var(--teal)"></i>Open weights</span>
+        </div>
+        <p class="fine">Order-of-magnitude public estimates of total training compute (FLOP), after Epoch AI. Points are representative systems, not a complete census, and labs rarely confirm these numbers.</p>
       </div>
       <div class="sig">
         <h3>The forecast keeps moving closer</h3>
@@ -267,6 +316,54 @@
         </div>
         <p class="fine">Approximate historical medians: Metaculus question 5121 over time; AI Impacts expert surveys (50% chance of high-level machine intelligence). The dashed line is this site's median today.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="frontier">
+  <div class="wrap">
+    <h2>The frontier <span>— what the compute bought</span></h2>
+    <p class="lede">Compute is the input; this is the output. Four benchmarks that are hard to game, across the models people actually run — and what a unit of that capability costs.</p>
+
+    <p class="tnote">Scores are the best published figures at the date stamped below, rounded — treat them as orientation, not a leaderboard. Labs test under different conditions and benchmarks get saturated or revised, so <b>the ranking matters more than the decimals</b>. Rows marked <span class="pendtag">unverified</span> are models announced without scores this site has been able to check; they stay on the table rather than being quietly left out.</p>
+
+    <div class="tscroll">
+      <table class="btab" id="benchTab">
+        <caption>Capability — higher is better, all figures per cent · <span id="benchAsOf"></span></caption>
+        <thead>
+          <tr>
+            <th scope="col">Model</th>
+            <th scope="col">Weights</th>
+            <th scope="col" class="r">ARC-AGI-2<small>novel reasoning</small></th>
+            <th scope="col" class="r">GPQA-D<small>graduate science</small></th>
+            <th scope="col" class="r">SWE-bench V<small>real bug fixes</small></th>
+            <th scope="col" class="r">HLE<small>hardest exam set</small></th>
+            <th scope="col" class="r">Blended cost<small>$ / M tokens</small></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="fine">
+      Benchmarks: <a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">ARC-AGI-2</a> (abstract reasoning on puzzles humans solve easily and models mostly cannot) ·
+      <a href="https://github.com/idavidrein/gpqa" target="_blank" rel="noopener">GPQA Diamond</a> (PhD-level questions that are Google-proof) ·
+      <a href="https://www.swebench.com/" target="_blank" rel="noopener">SWE-bench Verified</a> (patches that make real GitHub test suites pass) ·
+      <a href="https://agi.safe.ai/" target="_blank" rel="noopener">Humanity's Last Exam</a> (expert questions built to resist saturation).
+      Blended cost follows <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a>: three parts input to one part output, list API price.
+    </p>
+
+    <div class="scen">
+      <div class="scen-head">
+        <h3>Intelligence per dollar</h3>
+        <div class="chips" role="group" aria-label="Choose benchmark">
+          <button class="chip vchip" data-vb="avg" aria-pressed="true">Average</button>
+          <button class="chip vchip" data-vb="gpqa" aria-pressed="false">GPQA-D</button>
+          <button class="chip vchip" data-vb="swe" aria-pressed="false">SWE-bench</button>
+        </div>
+      </div>
+      <p class="sg-sub">Benchmark points bought per dollar of blended API cost. This is the axis on which open weights are not behind at all — and the reason capability keeps arriving in places nobody licensed it.</p>
+      <div class="vchart" id="chValue"></div>
+      <p class="fine">Points per dollar of blended cost, relative to the leader. Self-hosting an open-weight model changes the arithmetic again; these are hosted list prices. Models without verified scores are omitted from this chart.</p>
     </div>
   </div>
 </section>
@@ -468,48 +565,67 @@ function drawSpark(cfg){
 }
 SPARKS.forEach(drawSpark);
 
-/* ---- signals chart 1: frontier training compute (log scale) ---- */
+/* ---- signals chart 1: training compute, closed frontier vs open weights ----
+   Exponents are order-of-magnitude public estimates (log10 FLOP), after Epoch AI.
+   Mirrors data/models.json — see that file for provenance and caveats. */
 const COMPUTE = [
-  {y:2012.5, e:17.7, n:"AlexNet"},
+  {y:2012.5, e:17.7, n:"AlexNet",     lab:"below"},
   {y:2017.5, e:18.9, n:"Transformer"},
-  {y:2019.1, e:21.2, n:"GPT-2"},
-  {y:2020.4, e:23.5, n:"GPT-3"},
+  {y:2019.1, e:21.2, n:"GPT-2",       lab:"above"},
+  {y:2020.4, e:23.5, n:"GPT-3",       lab:"above"},
   {y:2022.3, e:24.4, n:"PaLM"},
-  {y:2023.2, e:25.3, n:"GPT-4"},
-  {y:2024.5, e:25.6, n:"Llama 3.1"},
-  {y:2025.7, e:26.6, n:"2025 frontier"}
+  {y:2023.2, e:25.3, n:"GPT-4",       lab:"above"},
+  {y:2024.5, e:25.8, n:"Llama 3.1"},
+  {y:2025.2, e:26.2, n:"Grok 3"},
+  {y:2025.8, e:26.5, n:"GPT-5",       lab:"below"},
+  {y:2026.1, e:26.7, n:"Claude Opus"},
+  {y:2026.6, e:26.9, n:"2026 frontier", lab:"end"}
 ];
+const OPEN = [
+  {y:2024.9, e:24.8, n:"DeepSeek-V3", lab:"below"},
+  {y:2025.5, e:25.1, n:"Kimi K2"},
+  {y:2025.9, e:25.2, n:"GLM-4.6"},
+  {y:2026.5, e:25.5, n:"open weights", lab:"end"}
+];
+const CY0 = 2012, CY1 = 2027;
 function buildCompute(){
-  const W = 520, H = 300, PL = 46, PR = 86, PT = 14, PB = 30;
-  const X = y => PL + (W-PL-PR) * (y-2012)/(2026.5-2012);
-  const Y = e => PT + (H-PT-PB) * (1 - (e-17)/(27-17));
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Training compute of frontier AI models, 2012 to 2025, log scale from ten to the seventeen to ten to the twenty-six FLOP">`;
+  const W = 520, H = 300, PL = 46, PR = 92, PT = 14, PB = 30;
+  const X = y => PL + (W-PL-PR) * (y-CY0)/(CY1-CY0);
+  const Y = e => PT + (H-PT-PB) * (1 - (e-17)/(27.4-17));
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Training compute of frontier AI models, 2012 to 2026, log scale from ten to the seventeen to ten to the twenty-seven FLOP, with open-weight models trailing the closed frontier">`;
   for(let e=18; e<=26; e+=2){
     s += `<line class="sg-gl" x1="${PL}" y1="${Y(e)}" x2="${W-PR}" y2="${Y(e)}"/>`;
     s += `<text class="sg-lb" x="${PL-6}" y="${Y(e)+4}" text-anchor="end">10<tspan dy="-5" font-size="8.5">${e}</tspan></text>`;
   }
-  for(let y=2012; y<=2026; y+=4)
+  for(let y=CY0; y<=2026; y+=4)
     s += `<text class="sg-lb" x="${X(y)}" y="${H-8}" text-anchor="middle">${y}</text>`;
   s += `<defs><clipPath id="clipC"><rect x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>`;
-  const d = COMPUTE.map((p,i)=>(i?"L":"M")+X(p.y).toFixed(1)+" "+Y(p.e).toFixed(1)).join(" ");
-  s += `<g clip-path="url(#clipC)"><path class="sg-line" d="${d}" stroke="var(--accent)"/></g>`;
-  COMPUTE.forEach((p,i) => {
-    s += `<circle class="sg-pt" data-i="${i}" cx="${X(p.y)}" cy="${Y(p.e)}" r="4.5" fill="var(--accent)"/>`;
-    if(["AlexNet","GPT-2","GPT-3","GPT-4","2025 frontier"].includes(p.n)){
-      const above = p.n !== "AlexNet";
-      s += `<text class="sg-name" data-yr="${p.y}" x="${X(p.y)+(p.n==="2025 frontier"?8:0)}" y="${Y(p.e)+(above?-10:16)}" text-anchor="${p.n==="2025 frontier"?"start":"middle"}">${p.n}</text>`;
-    }
-  });
+
+  const draw = (arr, color, set) => {
+    const d = arr.map((p,i)=>(i?"L":"M")+X(p.y).toFixed(1)+" "+Y(p.e).toFixed(1)).join(" ");
+    let t = `<g clip-path="url(#clipC)"><path class="sg-line" d="${d}" stroke="${color}"/></g>`;
+    arr.forEach((p,i) => {
+      t += `<circle class="sg-pt" data-set="${set}" data-i="${i}" data-px="${p.y}" cx="${X(p.y)}" cy="${Y(p.e)}" r="4.5" fill="${color}"/>`;
+      if(p.lab){
+        const end = p.lab === "end";
+        t += `<text class="sg-name" data-yr="${p.y}" x="${X(p.y)+(end?8:0)}" y="${Y(p.e)+(p.lab==="below"?16:-10)}" text-anchor="${end?"start":"middle"}"${end?` fill="${color}"`:""}>${p.n}</text>`;
+      }
+    });
+    return t;
+  };
+  s += draw(OPEN, "var(--teal)", "o");
+  s += draw(COMPUTE, "var(--accent)", "c");
   s += `</svg>`;
   $("chCompute").innerHTML = s;
-  hoverPts($("chCompute"), i => {
-    const p = COMPUTE[i];
-    return `<b>${p.n}</b> · ~${Math.floor(p.y)} · 10<sup>${p.e.toFixed(1)}</sup> FLOP`;
+  hoverPts($("chCompute"), (i, el) => {
+    const p = (el.dataset.set === "o" ? OPEN : COMPUTE)[i];
+    const kind = el.dataset.set === "o" ? "open weights" : "closed frontier";
+    return `<b>${p.n}</b> · ~${Math.floor(p.y)} · 10<sup>${p.e.toFixed(1)}</sup> FLOP · ${kind}`;
   });
   const clipC = $("chCompute").querySelector("#clipC rect");
-  player($("chCompute"), {min: 2012, max: 2026.5, msPerUnit: 600, apply: y => {
-    clipC.setAttribute("width", X(Math.min(y, 2026.5)).toFixed(1));
-    $("chCompute").querySelectorAll(".sg-pt").forEach(pt => { pt.style.opacity = COMPUTE[+pt.dataset.i].y <= y + .01 ? 1 : 0; });
+  player($("chCompute"), {min: CY0, max: CY1, msPerUnit: 560, apply: y => {
+    clipC.setAttribute("width", X(Math.min(y, CY1)).toFixed(1));
+    $("chCompute").querySelectorAll(".sg-pt").forEach(pt => { pt.style.opacity = +pt.dataset.px <= y + .01 ? 1 : 0; });
     $("chCompute").querySelectorAll(".sg-name[data-yr]").forEach(t => { t.style.opacity = +t.dataset.yr <= y + .01 ? 1 : 0; });
   }});
 }
@@ -622,6 +738,81 @@ function hoverPts(box, html){
 }
 buildCompute(); buildDrift();
 
+/* ---- the frontier: capability and cost ----
+   Mirrors data/models.json (canonical). Scores are the best published figures
+   as of BENCH_AS_OF, rounded; cost is list API price, blended 3:1 input:output
+   after Artificial Analysis. `pend` = announced but no scores verified here. */
+const BENCH_AS_OF = "September 2026";
+const COLS = [
+  {k:"arc",  t:"ARC-AGI-2"},
+  {k:"gpqa", t:"GPQA-D"},
+  {k:"swe",  t:"SWE-bench V"},
+  {k:"hle",  t:"HLE"}
+];
+const MODELS = [
+  /* closed weights */
+  {n:"Gemini 3 Pro",     org:"Google DeepMind", open:false, arc:31, gpqa:91, swe:76, hle:38, cin:2,    cout:12},
+  {n:"GPT-5",            org:"OpenAI",          open:false, arc:17, gpqa:88, swe:75, hle:35, cin:1.25, cout:10},
+  {n:"Claude Opus 4.5",  org:"Anthropic",       open:false, arc:18, gpqa:87, swe:80, hle:32, cin:5,    cout:25},
+  {n:"Grok 4",           org:"xAI",             open:false, arc:16, gpqa:87, swe:72, hle:38, cin:3,    cout:15},
+  {n:"Claude Sonnet 4.5",org:"Anthropic",       open:false, arc:14, gpqa:83, swe:77, hle:27, cin:3,    cout:15},
+  /* open weights */
+  {n:"DeepSeek-V3.2",    org:"DeepSeek",        open:true,  arc:9,  gpqa:80, swe:67, hle:20, cin:0.28, cout:0.42},
+  {n:"Kimi K2",          org:"Moonshot AI",     open:true,  arc:8,  gpqa:76, swe:69, hle:18, cin:0.6,  cout:2.5},
+  {n:"GLM-4.6",          org:"Z.ai (Zhipu)",    open:true,  arc:7,  gpqa:75, swe:68, hle:17, cin:0.6,  cout:2.2},
+  {n:"Qwen3-235B",       org:"Alibaba",         open:true,  arc:6,  gpqa:74, swe:62, hle:16, cin:0.22, cout:0.88},
+  {n:"Llama 4 Maverick", org:"Meta",            open:true,  arc:3,  gpqa:70, swe:45, hle:12, cin:0.22, cout:0.85},
+  /* announced, scores not verified here */
+  {n:"Claude Opus 5",    org:"Anthropic",       open:false, pend:true},
+  {n:"Claude Fable 5",   org:"Anthropic",       open:false, pend:true},
+  {n:"GPT-6 “Astra”", org:"OpenAI",   open:false, pend:true},
+  {n:"Grok 4.7",         org:"xAI",             open:false, pend:true}
+];
+const blended = m => (3*m.cin + m.cout) / 4;
+const avgScore = m => COLS.reduce((a,c) => a + m[c.k], 0) / COLS.length;
+
+function buildBench(){
+  $("benchAsOf").textContent = "as of " + BENCH_AS_OF;
+  const scored = MODELS.filter(m => !m.pend);
+  const max = {};
+  COLS.forEach(c => { max[c.k] = Math.max(...scored.map(m => m[c.k])); });
+  const cell = m => COLS.map(c =>
+    `<td class="r"><span class="bcell"><span class="bbar${m.open?" t":""}"><i style="width:${(m[c.k]/max[c.k]*100).toFixed(0)}%"></i></span>${m[c.k]}</span></td>`).join("");
+  document.querySelector("#benchTab tbody").innerHTML = MODELS.map(m => m.pend
+    ? `<tr class="pend">
+         <td><span class="m-name">${m.n}<span class="m-org">${m.org}</span></span></td>
+         <td><span class="wtag">closed</span></td>
+         <td class="r" colspan="4" style="text-align:center"><span class="pendtag">unverified — no published scores on file</span></td>
+         <td class="r">—</td>
+       </tr>`
+    : `<tr>
+         <td><span class="m-name">${m.n}<span class="m-org">${m.org}</span></span></td>
+         <td><span class="wtag${m.open?" open":""}">${m.open?"open":"closed"}</span></td>
+         ${cell(m)}
+         <td class="r">$${blended(m).toFixed(2)}</td>
+       </tr>`).join("");
+}
+
+let vBench = "avg";
+function buildValue(){
+  const scored = MODELS.filter(m => !m.pend);
+  const val = m => (vBench === "avg" ? avgScore(m) : m[vBench]) / blended(m);
+  const rows = scored.map(m => ({m, v: val(m)})).sort((a,b) => b.v - a.v);
+  const top = rows[0].v;
+  $("chValue").innerHTML = rows.map(({m,v}) => `
+    <div class="vrow">
+      <span class="vn">${m.n} <i>${m.open?"open":"closed"}</i></span>
+      <span class="vbar${m.open?" t":""}"><i style="width:${(v/top*100).toFixed(1)}%"></i></span>
+      <span class="vv">${v >= 100 ? Math.round(v) : v.toFixed(1)}</span>
+    </div>`).join("");
+}
+document.querySelectorAll(".vchip").forEach(c => c.addEventListener("click", () => {
+  vBench = c.dataset.vb;
+  document.querySelectorAll(".vchip").forEach(x => x.setAttribute("aria-pressed", x === c));
+  buildValue();
+}));
+buildBench(); buildValue();
+
 /* service worker (shared app shell with the clock) */
 if("serviceWorker" in navigator && (location.protocol === "https:" || ["localhost","127.0.0.1"].includes(location.hostname)))
   navigator.serviceWorker.register("sw.js").catch(()=>{});
@@ -701,9 +892,9 @@ function tween(to){
     if(p<1) requestAnimationFrame(step);
   })(t0);
 }
-document.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => {
+document.querySelectorAll("#economy .chip").forEach(c => c.addEventListener("click", () => {
   cur = c.dataset.sc;
-  document.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", x===c));
+  document.querySelectorAll("#economy .chip").forEach(x => x.setAttribute("aria-pressed", x===c));
   tween(SCEN[cur]); readout();
 }));
 function hover(){

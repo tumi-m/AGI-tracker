@@ -1,6 +1,6 @@
 /* Tiresias service worker — app shell cache, stale-while-revalidate. */
 "use strict";
-const VERSION = "tiresias-v4";
+const VERSION = "tiresias-v5";
 const SHELL = [
   "./",
   "index.html",
@@ -8,6 +8,7 @@ const SHELL = [
   "embed.html",
   "widget.js",
   "data/forecasts.json",
+  "data/models.json",
   "manifest.webmanifest",
   "icons/icon-192.png",
   "icons/icon-512.png"

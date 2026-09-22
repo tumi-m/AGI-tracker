@@ -1,0 +1,56 @@
+{
+  "as_of": "2026-09",
+  "note": "Canonical model dataset for resources.html. Scores are the best published figures at as_of, rounded to whole per cent — orientation, not a leaderboard. Labs evaluate under different conditions (tool use, scaffolds, sampling budgets) and benchmarks are revised, so ranking is more reliable than the digits. Corrections via pull request, with a link to the primary result.",
+  "benchmarks": {
+    "arc": { "name": "ARC-AGI-2", "what": "Abstract visual reasoning on novel puzzles humans solve easily", "source": "https://arcprize.org/leaderboard" },
+    "gpqa": { "name": "GPQA Diamond", "what": "Graduate-level science questions resistant to web search", "source": "https://github.com/idavidrein/gpqa" },
+    "swe": { "name": "SWE-bench Verified", "what": "Patches that make real GitHub test suites pass", "source": "https://www.swebench.com/" },
+    "hle": { "name": "Humanity's Last Exam", "what": "Expert-written questions built to resist saturation", "source": "https://agi.safe.ai/" }
+  },
+  "cost": {
+    "unit": "USD per million tokens, list API price",
+    "blend": "Blended cost = (3 x input + output) / 4, following Artificial Analysis",
+    "source": "https://artificialanalysis.ai/"
+  },
+  "models": [
+    { "name": "Gemini 3 Pro", "org": "Google DeepMind", "weights": "closed", "arc": 31, "gpqa": 91, "swe": 76, "hle": 38, "cost_in": 2.0, "cost_out": 12.0 },
+    { "name": "GPT-5", "org": "OpenAI", "weights": "closed", "arc": 17, "gpqa": 88, "swe": 75, "hle": 35, "cost_in": 1.25, "cost_out": 10.0 },
+    { "name": "Claude Opus 4.5", "org": "Anthropic", "weights": "closed", "arc": 18, "gpqa": 87, "swe": 80, "hle": 32, "cost_in": 5.0, "cost_out": 25.0 },
+    { "name": "Grok 4", "org": "xAI", "weights": "closed", "arc": 16, "gpqa": 87, "swe": 72, "hle": 38, "cost_in": 3.0, "cost_out": 15.0 },
+    { "name": "Claude Sonnet 4.5", "org": "Anthropic", "weights": "closed", "arc": 14, "gpqa": 83, "swe": 77, "hle": 27, "cost_in": 3.0, "cost_out": 15.0 },
+
+    { "name": "DeepSeek-V3.2", "org": "DeepSeek", "weights": "open", "arc": 9, "gpqa": 80, "swe": 67, "hle": 20, "cost_in": 0.28, "cost_out": 0.42 },
+    { "name": "Kimi K2", "org": "Moonshot AI", "weights": "open", "arc": 8, "gpqa": 76, "swe": 69, "hle": 18, "cost_in": 0.6, "cost_out": 2.5 },
+    { "name": "GLM-4.6", "org": "Z.ai (Zhipu)", "weights": "open", "arc": 7, "gpqa": 75, "swe": 68, "hle": 17, "cost_in": 0.6, "cost_out": 2.2 },
+    { "name": "Qwen3-235B", "org": "Alibaba", "weights": "open", "arc": 6, "gpqa": 74, "swe": 62, "hle": 16, "cost_in": 0.22, "cost_out": 0.88 },
+    { "name": "Llama 4 Maverick", "org": "Meta", "weights": "open", "arc": 3, "gpqa": 70, "swe": 45, "hle": 12, "cost_in": 0.22, "cost_out": 0.85 },
+
+    { "name": "Claude Opus 5", "org": "Anthropic", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset yet." },
+    { "name": "Claude Fable 5", "org": "Anthropic", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset yet." },
+    { "name": "GPT-6 “Astra”", "org": "OpenAI", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset yet." },
+    { "name": "Grok 4.7", "org": "xAI", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset yet." }
+  ],
+  "training_compute": {
+    "unit": "log10 FLOP, order-of-magnitude public estimate",
+    "source": "https://epoch.ai/trends",
+    "closed": [
+      { "name": "AlexNet", "year": 2012.5, "log10_flop": 17.7 },
+      { "name": "Transformer", "year": 2017.5, "log10_flop": 18.9 },
+      { "name": "GPT-2", "year": 2019.1, "log10_flop": 21.2 },
+      { "name": "GPT-3", "year": 2020.4, "log10_flop": 23.5 },
+      { "name": "PaLM", "year": 2022.3, "log10_flop": 24.4 },
+      { "name": "GPT-4", "year": 2023.2, "log10_flop": 25.3 },
+      { "name": "Llama 3.1 405B", "year": 2024.5, "log10_flop": 25.8 },
+      { "name": "Grok 3", "year": 2025.2, "log10_flop": 26.2 },
+      { "name": "GPT-5", "year": 2025.8, "log10_flop": 26.5 },
+      { "name": "Claude Opus", "year": 2026.1, "log10_flop": 26.7 },
+      { "name": "2026 frontier", "year": 2026.6, "log10_flop": 26.9 }
+    ],
+    "open": [
+      { "name": "DeepSeek-V3", "year": 2024.9, "log10_flop": 24.8 },
+      { "name": "Kimi K2", "year": 2025.5, "log10_flop": 25.1 },
+      { "name": "GLM-4.6", "year": 2025.9, "log10_flop": 25.2 },
+      { "name": "open weights", "year": 2026.5, "log10_flop": 25.5 }
+    ]
+  }
+}

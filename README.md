@@ -9,7 +9,8 @@ Built for developers, engineers, AI researchers and enthusiasts: minimal, Rams-p
 | File | Purpose |
 |---|---|
 | `index.html` | The canonical clock. Six switchable clock views (seer / split-flap / LED / HUD / dial / grammaton), forecast table with expandable sources, divergence timeline, widget & install section, integration docs. Fully self-contained — no build, no external requests. |
-| `resources.html` | Context page: Economy = Debt + Productivity + Demographics with live counters and sparklines, scenario chart, compute & forecast-drift charts, curated free library. |
+| `resources.html` | Context page: Economy = Debt + Productivity + Demographics with live counters and sparklines, scenario chart, compute & forecast-drift charts (each with an OWID-style play-through-time control), the frontier capability/cost tables, curated free library. |
+| `data/models.json` | Model dataset: training-compute estimates (closed frontier and open weights) plus ARC-AGI-2 / GPQA-D / SWE-bench Verified / HLE scores and list API pricing. Models announced without scores verified here are carried with `"unverified": true` rather than dropped. |
 | `embed.html` | Embeddable clock. Parameterized via query string (see below). |
 | `widget.js` | Script embed — renders inline and inherits the host page's font. |
 | `manifest.webmanifest` + `sw.js` + `icons/` | PWA layer: installable on phone / tablet / desktop, offline app shell. |
