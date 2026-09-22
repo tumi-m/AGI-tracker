@@ -1,35 +1,44 @@
 {
-  "as_of": "2026-09",
-  "note": "Canonical model dataset for resources.html. Scores are the best published figures at as_of, rounded to whole per cent — orientation, not a leaderboard. Labs evaluate under different conditions (tool use, scaffolds, sampling budgets) and benchmarks are revised, so ranking is more reliable than the digits. Corrections via pull request, with a link to the primary result.",
+  "as_of": "2026-09-21",
+  "note": "Canonical model dataset for resources.html. null means the lab has published nothing this dataset could verify; \"unverified\": true means the model is announced but carries no scores on file. SOURCING CAVEAT: the primary leaderboards (arcprize.org, epoch.ai, artificialanalysis.ai, llm-stats.com) are blocked by the network egress policy of the environment that assembled this file, so figures were taken from public trackers reached through search rather than read off the source. Treat the ranking as reliable and the decimals as approximate; corrections via pull request, with a link to the primary result.",
+  "benchmark_generation_note": "ARC-AGI-2 and SWE-bench Verified both saturated during 2026 — frontier models moved from the teens to 90+ on ARC-AGI-2, and above 95 per cent on SWE-bench Verified. ARC-AGI-3 (interactive) and SWE-bench Pro replaced them. GPQA Diamond was dropped from this table for the same reason, having topped out around 92. HLE now tracks the rolling edition, refreshed as questions fall.",
   "benchmarks": {
-    "arc": { "name": "ARC-AGI-2", "what": "Abstract visual reasoning on novel puzzles humans solve easily", "source": "https://arcprize.org/leaderboard" },
-    "gpqa": { "name": "GPQA Diamond", "what": "Graduate-level science questions resistant to web search", "source": "https://github.com/idavidrein/gpqa" },
-    "swe": { "name": "SWE-bench Verified", "what": "Patches that make real GitHub test suites pass", "source": "https://www.swebench.com/" },
-    "hle": { "name": "Humanity's Last Exam", "what": "Expert-written questions built to resist saturation", "source": "https://agi.safe.ai/" }
+    "arc2": { "name": "ARC-AGI-2", "what": "Abstract visual reasoning; saturated in 2026, retained to show the jump", "source": "https://arcprize.org/leaderboard", "human_average": 66 },
+    "arc3": { "name": "ARC-AGI-3", "what": "Interactive reasoning — the model is given an unseen game and must infer the rules", "source": "https://arcprize.org/arc-agi/3/leaderboard" },
+    "swe": { "name": "SWE-bench Pro", "what": "Harder successor to SWE-bench Verified: patches that make real test suites pass", "source": "https://www.swebench.com/" },
+    "hle": { "name": "Humanity's Last Exam (rolling)", "what": "Expert-written questions, continually refreshed as models clear them", "source": "https://agi.safe.ai/" }
   },
   "cost": {
     "unit": "USD per million tokens, list API price",
-    "blend": "Blended cost = (3 x input + output) / 4, following Artificial Analysis",
+    "blend": "blended_cost = (3 x input + output) / 4, following Artificial Analysis. Where only a single blended figure was published, it is recorded as \"blended\" directly.",
     "source": "https://artificialanalysis.ai/"
   },
   "models": [
-    { "name": "Gemini 3 Pro", "org": "Google DeepMind", "weights": "closed", "arc": 31, "gpqa": 91, "swe": 76, "hle": 38, "cost_in": 2.0, "cost_out": 12.0 },
-    { "name": "GPT-5", "org": "OpenAI", "weights": "closed", "arc": 17, "gpqa": 88, "swe": 75, "hle": 35, "cost_in": 1.25, "cost_out": 10.0 },
-    { "name": "Claude Opus 4.5", "org": "Anthropic", "weights": "closed", "arc": 18, "gpqa": 87, "swe": 80, "hle": 32, "cost_in": 5.0, "cost_out": 25.0 },
-    { "name": "Grok 4", "org": "xAI", "weights": "closed", "arc": 16, "gpqa": 87, "swe": 72, "hle": 38, "cost_in": 3.0, "cost_out": 15.0 },
-    { "name": "Claude Sonnet 4.5", "org": "Anthropic", "weights": "closed", "arc": 14, "gpqa": 83, "swe": 77, "hle": 27, "cost_in": 3.0, "cost_out": 15.0 },
+    { "name": "GPT-6 “Astra”", "org": "OpenAI", "weights": "closed", "arc2": 95, "arc3": 62.7, "swe": null, "hle": null, "cost_in": 10.0, "cost_out": 50.0 },
+    { "name": "Claude Fable 5.1", "org": "Anthropic", "weights": "closed", "arc2": null, "arc3": null, "swe": 81.2, "hle": 59.1, "cost_in": 10.0, "cost_out": 50.0 },
+    { "name": "Claude Fable 5", "org": "Anthropic", "weights": "closed", "arc2": null, "arc3": null, "swe": 80.3, "hle": 55.5, "cost_in": 10.0, "cost_out": 50.0 },
+    { "name": "Claude Mythos 5", "org": "Anthropic", "weights": "closed", "arc2": null, "arc3": null, "swe": 80.3, "hle": null, "cost_in": 10.0, "cost_out": 50.0 },
+    { "name": "Claude Opus 5", "org": "Anthropic", "weights": "closed", "arc2": 90.4, "arc3": 30.2, "swe": 79.2, "hle": 54.9, "cost_in": 5.0, "cost_out": 25.0 },
+    { "name": "GPT-5.6 Sol", "org": "OpenAI", "weights": "closed", "arc2": 92.5, "arc3": 7.8, "swe": null, "hle": null, "cost_in": null, "cost_out": null },
+    { "name": "Qwen3.8 Max", "org": "Alibaba", "weights": "closed", "arc2": null, "arc3": null, "swe": 67.7, "hle": null, "cost_in": null, "cost_out": null },
+    { "name": "Qwen3.7 Max", "org": "Alibaba", "weights": "closed", "arc2": null, "arc3": null, "swe": 60.6, "hle": null, "cost_in": null, "cost_out": null },
 
-    { "name": "DeepSeek-V3.2", "org": "DeepSeek", "weights": "open", "arc": 9, "gpqa": 80, "swe": 67, "hle": 20, "cost_in": 0.28, "cost_out": 0.42 },
-    { "name": "Kimi K2", "org": "Moonshot AI", "weights": "open", "arc": 8, "gpqa": 76, "swe": 69, "hle": 18, "cost_in": 0.6, "cost_out": 2.5 },
-    { "name": "GLM-4.6", "org": "Z.ai (Zhipu)", "weights": "open", "arc": 7, "gpqa": 75, "swe": 68, "hle": 17, "cost_in": 0.6, "cost_out": 2.2 },
-    { "name": "Qwen3-235B", "org": "Alibaba", "weights": "open", "arc": 6, "gpqa": 74, "swe": 62, "hle": 16, "cost_in": 0.22, "cost_out": 0.88 },
-    { "name": "Llama 4 Maverick", "org": "Meta", "weights": "open", "arc": 3, "gpqa": 70, "swe": 45, "hle": 12, "cost_in": 0.22, "cost_out": 0.85 },
+    { "name": "Qwen3.8-Flash-Next", "org": "Alibaba", "weights": "open", "arc2": null, "arc3": null, "swe": 62.5, "hle": null, "cost_in": null, "cost_out": null },
+    { "name": "GLM-5.2", "org": "Z.ai (Zhipu)", "weights": "open", "arc2": null, "arc3": null, "swe": 62.1, "hle": null, "blended": 2.40, "price_note": "cut from 3.00 during 2026" },
+    { "name": "Qwen3.8-27B", "org": "Alibaba", "weights": "open", "arc2": null, "arc3": null, "swe": 61.7, "hle": null, "cost_in": null, "cost_out": null },
+    { "name": "MiniMax M3", "org": "MiniMax", "weights": "open", "arc2": null, "arc3": null, "swe": 59.0, "hle": null, "blended": 1.10, "price_note": "cut from 1.20" },
+    { "name": "Kimi K2.6", "org": "Moonshot AI", "weights": "open", "arc2": null, "arc3": null, "swe": 58.6, "hle": null, "cost_in": null, "cost_out": null },
+    { "name": "DeepSeek V4 Pro-Max", "org": "DeepSeek", "weights": "open", "arc2": null, "arc3": null, "swe": null, "hle": null, "blended": 2.60, "price_note": "cut from 3.20" },
+    { "name": "DeepSeek V4 Flash", "org": "DeepSeek", "weights": "open", "arc2": null, "arc3": null, "swe": null, "hle": null, "cost_in": 0.44, "cost_out": 1.32 },
 
-    { "name": "Claude Opus 5", "org": "Anthropic", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset yet." },
-    { "name": "Claude Fable 5", "org": "Anthropic", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset yet." },
-    { "name": "GPT-6 “Astra”", "org": "OpenAI", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset yet." },
-    { "name": "Grok 4.7", "org": "xAI", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset yet." }
+    { "name": "GLM-5.3", "org": "Z.ai (Zhipu)", "weights": "open", "unverified": true, "note": "Released; no SWE-bench Pro score published by the vendor." },
+    { "name": "Kimi K3", "org": "Moonshot AI", "weights": "open", "unverified": true, "note": "Released; no SWE-bench Pro score published by the vendor." },
+    { "name": "Grok 4.7", "org": "xAI", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset." }
   ],
+  "context": {
+    "swe_bench_verified_retired": "Frontier models cleared SWE-bench Verified above 95 per cent during 2026 (Claude Opus 5 around 96-97), clustering the leaders within a point. OpenAI stopped reporting Verified and now points to SWE-bench Pro.",
+    "open_weight_crossover": "Four open-weight models now clear the vendor SWE-bench Pro figure reported for GPT-5.5 (58.6), putting open weights roughly one generation, not one era, behind the closed frontier."
+  },
   "training_compute": {
     "unit": "log10 FLOP, order-of-magnitude public estimate",
     "source": "https://epoch.ai/trends",

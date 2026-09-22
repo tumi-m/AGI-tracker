@@ -325,9 +325,9 @@
 <section id="frontier">
   <div class="wrap">
     <h2>The frontier <span>— what the compute bought</span></h2>
-    <p class="lede">Compute is the input; this is the output. Four benchmarks that are hard to game, across the models people actually run — and what a unit of that capability costs.</p>
+    <p class="lede">Compute is the input; this is the output. Four benchmarks across the models people actually run — and what a unit of that capability costs. <b>Two of the four were retired this year for being too easy.</b></p>
 
-    <p class="tnote">Scores are the best published figures at the date stamped below, rounded — treat them as orientation, not a leaderboard. Labs test under different conditions and benchmarks get saturated or revised, so <b>the ranking matters more than the decimals</b>. Rows marked <span class="pendtag">unverified</span> are models announced without scores this site has been able to check; they stay on the table rather than being quietly left out.</p>
+    <p class="tnote">Read the first column as an obituary. <b>ARC-AGI-2 was the hard one a year ago</b> — frontier models scored in the teens, and human average is 66 per cent. It is now cleared at 90 and above, so ARC-AGI-3 and SWE-bench Pro replaced it and the old numbers stopped meaning anything. That churn is the finding: benchmarks are being retired faster than they can be written. A dash means the lab has published nothing this dataset could check, and rows marked <span class="pendtag">unverified</span> are models announced with no scores on file — they stay on the table rather than being quietly left out.</p>
 
     <div class="tscroll">
       <table class="btab" id="benchTab">
@@ -336,9 +336,9 @@
           <tr>
             <th scope="col">Model</th>
             <th scope="col">Weights</th>
-            <th scope="col" class="r">ARC-AGI-2<small>novel reasoning</small></th>
-            <th scope="col" class="r">GPQA-D<small>graduate science</small></th>
-            <th scope="col" class="r">SWE-bench V<small>real bug fixes</small></th>
+            <th scope="col" class="r">ARC-AGI-2<small>saturated this year</small></th>
+            <th scope="col" class="r">ARC-AGI-3<small>interactive reasoning</small></th>
+            <th scope="col" class="r">SWE-bench Pro<small>real bug fixes</small></th>
             <th scope="col" class="r">HLE<small>hardest exam set</small></th>
             <th scope="col" class="r">Blended cost<small>$ / M tokens</small></th>
           </tr>
@@ -347,11 +347,11 @@
       </table>
     </div>
     <p class="fine">
-      Benchmarks: <a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">ARC-AGI-2</a> (abstract reasoning on puzzles humans solve easily and models mostly cannot) ·
-      <a href="https://github.com/idavidrein/gpqa" target="_blank" rel="noopener">GPQA Diamond</a> (PhD-level questions that are Google-proof) ·
-      <a href="https://www.swebench.com/" target="_blank" rel="noopener">SWE-bench Verified</a> (patches that make real GitHub test suites pass) ·
-      <a href="https://agi.safe.ai/" target="_blank" rel="noopener">Humanity's Last Exam</a> (expert questions built to resist saturation).
+      Benchmarks: <a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">ARC-AGI-2 and ARC-AGI-3</a> — the second is interactive, giving a model a game it has never seen and scoring whether it works the rules out; it is the one still far from solved ·
+      <a href="https://www.swebench.com/" target="_blank" rel="noopener">SWE-bench Pro</a> (harder successor to Verified, which frontier models now clear above 95 per cent) ·
+      <a href="https://agi.safe.ai/" target="_blank" rel="noopener">Humanity's Last Exam</a>, rolling edition (expert questions, refreshed as they fall).
       Blended cost follows <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a>: three parts input to one part output, list API price.
+      <b>Sourcing caveat:</b> the primary leaderboards are unreachable from the machine that built this page, so these figures were assembled from public trackers rather than read off the source. Spot-check anything you intend to rely on.
     </p>
 
     <div class="scen">
@@ -359,8 +359,8 @@
         <h3>Intelligence per dollar</h3>
         <div class="chips" role="group" aria-label="Choose benchmark">
           <button class="chip vchip" data-vb="avg" aria-pressed="true">Average</button>
-          <button class="chip vchip" data-vb="gpqa" aria-pressed="false">GPQA-D</button>
-          <button class="chip vchip" data-vb="swe" aria-pressed="false">SWE-bench</button>
+          <button class="chip vchip" data-vb="swe" aria-pressed="false">SWE-bench Pro</button>
+          <button class="chip vchip" data-vb="hle" aria-pressed="false">HLE</button>
         </div>
       </div>
       <p class="sg-sub">Benchmark points bought per dollar of blended API cost. This is the axis on which open weights are not behind at all — and the reason capability keeps arriving in places nobody licensed it.</p>
@@ -744,62 +744,83 @@ buildCompute(); buildDrift();
    Mirrors data/models.json (canonical). Scores are the best published figures
    as of BENCH_AS_OF, rounded; cost is list API price, blended 3:1 input:output
    after Artificial Analysis. `pend` = announced but no scores verified here. */
-const BENCH_AS_OF = "September 2026";
+const BENCH_AS_OF = "21 September 2026";
 const COLS = [
-  {k:"arc",  t:"ARC-AGI-2"},
-  {k:"gpqa", t:"GPQA-D"},
-  {k:"swe",  t:"SWE-bench V"},
+  {k:"arc2", t:"ARC-AGI-2"},
+  {k:"arc3", t:"ARC-AGI-3"},
+  {k:"swe",  t:"SWE-bench Pro"},
   {k:"hle",  t:"HLE"}
 ];
+/* null = the lab has published nothing this dataset could verify.
+   blend = a blended figure quoted directly; otherwise computed from cin/cout. */
 const MODELS = [
   /* closed weights */
-  {n:"Gemini 3 Pro",     org:"Google DeepMind", open:false, arc:31, gpqa:91, swe:76, hle:38, cin:2,    cout:12},
-  {n:"GPT-5",            org:"OpenAI",          open:false, arc:17, gpqa:88, swe:75, hle:35, cin:1.25, cout:10},
-  {n:"Claude Opus 4.5",  org:"Anthropic",       open:false, arc:18, gpqa:87, swe:80, hle:32, cin:5,    cout:25},
-  {n:"Grok 4",           org:"xAI",             open:false, arc:16, gpqa:87, swe:72, hle:38, cin:3,    cout:15},
-  {n:"Claude Sonnet 4.5",org:"Anthropic",       open:false, arc:14, gpqa:83, swe:77, hle:27, cin:3,    cout:15},
+  {n:"GPT-6 “Astra”", org:"OpenAI",    open:false, arc2:95,   arc3:62.7, swe:null, hle:null, cin:10, cout:50},
+  {n:"Claude Fable 5.1", org:"Anthropic",        open:false, arc2:null, arc3:null, swe:81.2, hle:59.1, cin:10, cout:50},
+  {n:"Claude Fable 5",   org:"Anthropic",        open:false, arc2:null, arc3:null, swe:80.3, hle:55.5, cin:10, cout:50},
+  {n:"Claude Mythos 5",  org:"Anthropic",        open:false, arc2:null, arc3:null, swe:80.3, hle:null, cin:10, cout:50},
+  {n:"Claude Opus 5",    org:"Anthropic",        open:false, arc2:90.4, arc3:30.2, swe:79.2, hle:54.9, cin:5,  cout:25},
+  {n:"GPT-5.6 Sol",      org:"OpenAI",           open:false, arc2:92.5, arc3:7.8,  swe:null, hle:null, cin:null, cout:null},
+  {n:"Qwen3.8 Max",      org:"Alibaba",          open:false, arc2:null, arc3:null, swe:67.7, hle:null, cin:null, cout:null},
+  {n:"Qwen3.7 Max",      org:"Alibaba",          open:false, arc2:null, arc3:null, swe:60.6, hle:null, cin:null, cout:null},
   /* open weights */
-  {n:"DeepSeek-V3.2",    org:"DeepSeek",        open:true,  arc:9,  gpqa:80, swe:67, hle:20, cin:0.28, cout:0.42},
-  {n:"Kimi K2",          org:"Moonshot AI",     open:true,  arc:8,  gpqa:76, swe:69, hle:18, cin:0.6,  cout:2.5},
-  {n:"GLM-4.6",          org:"Z.ai (Zhipu)",    open:true,  arc:7,  gpqa:75, swe:68, hle:17, cin:0.6,  cout:2.2},
-  {n:"Qwen3-235B",       org:"Alibaba",         open:true,  arc:6,  gpqa:74, swe:62, hle:16, cin:0.22, cout:0.88},
-  {n:"Llama 4 Maverick", org:"Meta",            open:true,  arc:3,  gpqa:70, swe:45, hle:12, cin:0.22, cout:0.85},
-  /* announced, scores not verified here */
-  {n:"Claude Opus 5",    org:"Anthropic",       open:false, pend:true},
-  {n:"Claude Fable 5",   org:"Anthropic",       open:false, pend:true},
-  {n:"GPT-6 “Astra”", org:"OpenAI",   open:false, pend:true},
-  {n:"Grok 4.7",         org:"xAI",             open:false, pend:true}
+  {n:"Qwen3.8-Flash-Next",org:"Alibaba",         open:true,  arc2:null, arc3:null, swe:62.5, hle:null, cin:null, cout:null},
+  {n:"GLM-5.2",          org:"Z.ai (Zhipu)",     open:true,  arc2:null, arc3:null, swe:62.1, hle:null, blend:2.40},
+  {n:"Qwen3.8-27B",      org:"Alibaba",          open:true,  arc2:null, arc3:null, swe:61.7, hle:null, cin:null, cout:null},
+  {n:"MiniMax M3",       org:"MiniMax",          open:true,  arc2:null, arc3:null, swe:59.0, hle:null, blend:1.10},
+  {n:"Kimi K2.6",        org:"Moonshot AI",      open:true,  arc2:null, arc3:null, swe:58.6, hle:null, cin:null, cout:null},
+  {n:"DeepSeek V4 Pro-Max",org:"DeepSeek",       open:true,  arc2:null, arc3:null, swe:null, hle:null, blend:2.60},
+  {n:"DeepSeek V4 Flash",org:"DeepSeek",         open:true,  arc2:null, arc3:null, swe:null, hle:null, cin:0.44, cout:1.32},
+  /* announced, nothing verified for this dataset */
+  {n:"GLM-5.3",          org:"Z.ai (Zhipu)",     open:true,  pend:true},
+  {n:"Kimi K3",          org:"Moonshot AI",      open:true,  pend:true},
+  {n:"Grok 4.7",         org:"xAI",              open:false, pend:true}
 ];
-const blended = m => (3*m.cin + m.cout) / 4;
-const avgScore = m => COLS.reduce((a,c) => a + m[c.k], 0) / COLS.length;
+const blended = m => m.blend != null ? m.blend
+  : (m.cin != null && m.cout != null ? (3*m.cin + m.cout) / 4 : null);
+const scoresOf = m => COLS.map(c => m[c.k]).filter(v => v != null);
+const avgScore = m => { const s = scoresOf(m); return s.length ? s.reduce((a,b)=>a+b,0)/s.length : null; };
+const DASH = `<span style="color:var(--ink3)">&mdash;</span>`;
 
 function buildBench(){
   $("benchAsOf").textContent = "as of " + BENCH_AS_OF;
   const scored = MODELS.filter(m => !m.pend);
   const max = {};
-  COLS.forEach(c => { max[c.k] = Math.max(...scored.map(m => m[c.k])); });
-  const cell = m => COLS.map(c =>
-    `<td class="r"><span class="bcell"><span class="bbar${m.open?" t":""}"><i style="width:${(m[c.k]/max[c.k]*100).toFixed(0)}%"></i></span>${m[c.k]}</span></td>`).join("");
-  document.querySelector("#benchTab tbody").innerHTML = MODELS.map(m => m.pend
-    ? `<tr class="pend">
+  COLS.forEach(c => {
+    const vals = scored.map(m => m[c.k]).filter(v => v != null);
+    max[c.k] = vals.length ? Math.max(...vals) : 1;
+  });
+  const cell = m => COLS.map(c => m[c.k] == null
+    ? `<td class="r">${DASH}</td>`
+    : `<td class="r"><span class="bcell"><span class="bbar${m.open?" t":""}"><i style="width:${(m[c.k]/max[c.k]*100).toFixed(0)}%"></i></span>${m[c.k]}</span></td>`).join("");
+  document.querySelector("#benchTab tbody").innerHTML = MODELS.map(m => {
+    const tag = `<span class="wtag${m.open?" open":""}">${m.open?"open":"closed"}</span>`;
+    if(m.pend) return `<tr class="pend">
          <td><span class="m-name">${m.n}<span class="m-org">${m.org}</span></span></td>
-         <td><span class="wtag">closed</span></td>
+         <td>${tag}</td>
          <td class="r" colspan="4" style="text-align:center"><span class="pendtag">unverified — no published scores on file</span></td>
-         <td class="r">—</td>
-       </tr>`
-    : `<tr>
+         <td class="r">${DASH}</td>
+       </tr>`;
+    const b = blended(m);
+    return `<tr>
          <td><span class="m-name">${m.n}<span class="m-org">${m.org}</span></span></td>
-         <td><span class="wtag${m.open?" open":""}">${m.open?"open":"closed"}</span></td>
+         <td>${tag}</td>
          ${cell(m)}
-         <td class="r">$${blended(m).toFixed(2)}</td>
-       </tr>`).join("");
+         <td class="r">${b == null ? DASH : "$" + b.toFixed(2)}</td>
+       </tr>`;
+  }).join("");
 }
 
 let vBench = "avg";
 function buildValue(){
-  const scored = MODELS.filter(m => !m.pend);
-  const val = m => (vBench === "avg" ? avgScore(m) : m[vBench]) / blended(m);
-  const rows = scored.map(m => ({m, v: val(m)})).sort((a,b) => b.v - a.v);
+  const val = m => {
+    const b = blended(m);
+    const s = vBench === "avg" ? avgScore(m) : m[vBench];
+    return (b == null || s == null || b === 0) ? null : s / b;
+  };
+  const rows = MODELS.filter(m => !m.pend).map(m => ({m, v: val(m)}))
+    .filter(r => r.v != null).sort((a,b) => b.v - a.v);
+  if(!rows.length){ $("chValue").innerHTML = `<p class="fine">No model has both a published score and a published price on this benchmark.</p>`; return; }
   const top = rows[0].v;
   $("chValue").innerHTML = rows.map(({m,v}) => `
     <div class="vrow">
