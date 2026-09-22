@@ -81,6 +81,7 @@
   .chip{background:none;border:none;padding:9px 18px;font:500 13px var(--sans);letter-spacing:.04em;color:var(--ink2);transition:.12s}
   .chip + .chip{border-left:1px solid var(--line)}
   .chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+  @media(max-width:640px){.chip{padding:9px 11px;font-size:12px;letter-spacing:.02em}}
   .chartbox{overflow-x:auto}
   .chartbox svg{width:100%;min-width:600px;height:340px;display:block;overflow:visible}
   .gl{stroke:var(--line);stroke-width:1}
@@ -277,6 +278,7 @@
         <div class="chips" role="group" aria-label="Choose scenario">
           <button class="chip" data-sc="2027" aria-pressed="false">AGI 2027</button>
           <button class="chip" data-sc="2030" aria-pressed="true">AGI 2030</button>
+          <button class="chip" data-sc="2035" aria-pressed="false">AGI 2035</button>
           <button class="chip" data-sc="none" aria-pressed="false">No AGI</button>
         </div>
       </div>
@@ -833,7 +835,7 @@ function series(agiYear){
   return out;
 }
 const BASE = series(null);
-const SCEN = {"2027": series(2027), "2030": series(2030), "none": BASE};
+const SCEN = {"2027": series(2027), "2030": series(2030), "2035": series(2035), "none": BASE};
 let cur = "2030";
 let shown = SCEN[cur].slice();  /* animated values */
 
