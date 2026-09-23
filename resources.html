@@ -347,7 +347,7 @@
             <th scope="col" class="r">ARC-AGI-2<small>saturated this year</small></th>
             <th scope="col" class="r">ARC-AGI-3<small>interactive reasoning</small></th>
             <th scope="col" class="r">SWE-bench Pro<small>real bug fixes</small></th>
-            <th scope="col" class="r">HLE<small>hardest exam set</small></th>
+            <th scope="col" class="r">HLE<small>with tools</small></th>
             <th scope="col" class="r">Blended cost<small>$ / M tokens</small></th>
           </tr>
         </thead>
@@ -357,9 +357,9 @@
     <p class="fine">
       Benchmarks: <a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">ARC-AGI-2 and ARC-AGI-3</a> — the second is interactive, giving a model a game it has never seen and scoring whether it works the rules out; it is the one still far from solved ·
       <a href="https://www.swebench.com/" target="_blank" rel="noopener">SWE-bench Pro</a> (harder successor to Verified, which frontier models now clear above 95 per cent) ·
-      <a href="https://agi.safe.ai/" target="_blank" rel="noopener">Humanity's Last Exam</a>, rolling edition (expert questions, refreshed as they fall).
+      <a href="https://agi.safe.ai/" target="_blank" rel="noopener">Humanity's Last Exam</a> (expert-written questions built to resist saturation).
       Blended cost follows <a href="https://artificialanalysis.ai/" target="_blank" rel="noopener">Artificial Analysis</a>: three parts input to one part output, list API price.
-      A <abbr title="run with tools enabled">&dagger;</abbr> marks an HLE figure reported with tools enabled, which is not directly comparable to a no-tools run — one reason to read the column as a ranking rather than a measurement.
+      The HLE column holds tools-enabled runs only. Labs report HLE both with and without tools and the two differ by ten points or more, so a figure of unknown condition is left out rather than mixed in — which is why Gemini, with published no-tools scores in the mid-forties, shows a dash there.
       <b>Sourcing caveat:</b> the primary leaderboards are unreachable from the machine that built this page, so these figures were assembled from public trackers rather than read off the source. Spot-check anything you intend to rely on.
     </p>
 
@@ -372,7 +372,7 @@
           <button class="chip vchip" data-vb="hle" aria-pressed="false">HLE</button>
         </div>
       </div>
-      <p class="sg-sub">Benchmark points bought per dollar of blended API cost. This is the axis on which open weights are not behind at all — and the reason capability keeps arriving in places nobody licensed it.</p>
+      <p class="sg-sub">Benchmark points bought per dollar of blended API cost. On coding, open weights and the cheap closed tiers buy up to thirteen times what the flagships do — the reason capability keeps arriving in places nobody licensed it.</p>
       <div class="vchart" id="chValue"></div>
       <p class="fine">Points per dollar of blended cost, relative to the leader. A model appears only where both a score and a list price are published, so this chart is shorter than the table above. Self-hosting an open-weight model changes the arithmetic again; these are hosted prices.</p>
     </div>
@@ -765,28 +765,32 @@ const COLS = [
    pend = a string saying what the lab HAS published instead, when none of the
    four columns is covered. */
 const MODELS = [
-  /* closed weights */
+  /* closed weights — HLE is the tools-enabled figure throughout */
   {n:"Claude Opus 5.5",  org:"Anthropic",        open:false, fresh:true,
-                                                 arc2:null, arc3:null, swe:89.9, hle:67.7, cin:4,  cout:20, hleTools:true},
-  {n:"GPT-6 “Astra”", org:"OpenAI",    open:false, arc2:95,   arc3:62.7, swe:null, hle:null, cin:10, cout:50},
-  {n:"Claude Fable 5.1", org:"Anthropic",        open:false, arc2:null, arc3:null, swe:81.2, hle:59.1, cin:10, cout:50},
-  {n:"Claude Fable 5",   org:"Anthropic",        open:false, arc2:null, arc3:null, swe:80.3, hle:55.5, cin:10, cout:50},
-  {n:"Claude Mythos 5",  org:"Anthropic",        open:false, arc2:null, arc3:null, swe:80.3, hle:null, cin:10, cout:50},
-  {n:"Claude Opus 5",    org:"Anthropic",        open:false, arc2:90.4, arc3:30.2, swe:79.2, hle:54.9, cin:5,  cout:25},
-  {n:"GPT-5.6 Sol",      org:"OpenAI",           open:false, arc2:92.5, arc3:7.8,  swe:null, hle:null, cin:null, cout:null},
-  {n:"Qwen3.8 Max",      org:"Alibaba",          open:false, arc2:null, arc3:null, swe:67.7, hle:null, cin:null, cout:null},
+                                                 arc2:null, arc3:null, swe:89.9, hle:67.7, cin:4,    cout:20},
+  {n:"GPT-6 “Astra”", org:"OpenAI",    open:false, arc2:95,   arc3:62.7, swe:null, hle:57.2, cin:10,   cout:50},
+  {n:"Claude Fable 5.1", org:"Anthropic",        open:false, arc2:null, arc3:null, swe:81.2, hle:65.6, cin:10,   cout:50},
+  {n:"Claude Fable 5",   org:"Anthropic",        open:false, arc2:null, arc3:null, swe:80.3, hle:null, cin:10,   cout:50},
+  {n:"Claude Mythos 5",  org:"Anthropic",        open:false, arc2:null, arc3:null, swe:80.3, hle:null, cin:10,   cout:50},
+  {n:"Claude Opus 5",    org:"Anthropic",        open:false, arc2:90.4, arc3:30.2, swe:79.2, hle:63.6, cin:5,    cout:25},
+  {n:"GPT-5.6 Sol",      org:"OpenAI",           open:false, arc2:92.5, arc3:7.8,  swe:null, hle:null, cin:4,    cout:20},
+  {n:"Qwen3.8 Max",      org:"Alibaba",          open:false, arc2:null, arc3:null, swe:67.7, hle:null, cin:2,    cout:6},
+  {n:"Claude Sonnet 5",  org:"Anthropic",        open:false, arc2:null, arc3:null, swe:63.2, hle:57.4, cin:2,    cout:10},
+  {n:"Gemini 3.8 Flash", org:"Google DeepMind",  open:false, arc2:null, arc3:null, swe:61.6, hle:null, cin:0.75, cout:3.75},
   {n:"Qwen3.7 Max",      org:"Alibaba",          open:false, arc2:null, arc3:null, swe:60.6, hle:null, cin:null, cout:null},
+  {n:"Gemini 3.1 Pro",   org:"Google DeepMind",  open:false, arc2:77.1, arc3:null, swe:54.2, hle:null, cin:2,    cout:12},
   /* open weights */
   {n:"Qwen3.8-Flash-Next",org:"Alibaba",         open:true,  arc2:null, arc3:null, swe:62.5, hle:null, cin:null, cout:null},
   {n:"GLM-5.2",          org:"Z.ai (Zhipu)",     open:true,  arc2:null, arc3:null, swe:62.1, hle:null, blend:2.40},
   {n:"Qwen3.8-27B",      org:"Alibaba",          open:true,  arc2:null, arc3:null, swe:61.7, hle:null, cin:null, cout:null},
   {n:"MiniMax M3",       org:"MiniMax",          open:true,  arc2:null, arc3:null, swe:59.0, hle:null, blend:1.10},
-  {n:"Kimi K2.6",        org:"Moonshot AI",      open:true,  arc2:null, arc3:null, swe:58.6, hle:null, cin:null, cout:null},
+  {n:"Kimi K2.6",        org:"Moonshot AI",      open:true,  arc2:null, arc3:null, swe:58.6, hle:null, cin:0.95, cout:4},
   {n:"DeepSeek V4 Pro-Max",org:"DeepSeek",       open:true,  arc2:null, arc3:null, swe:null, hle:null, blend:2.60},
   {n:"DeepSeek V4 Flash-Max",org:"DeepSeek",     open:true,  arc2:null, arc3:null, swe:null, hle:null, blend:0.18},
   /* published, but on benchmarks outside these four columns */
   {n:"GLM-5.3",          org:"Z.ai (Zhipu)",     open:true,  pend:"Terminal-Bench 2.1 88.2 · tops open weights on GDPval-AA · no ARC or SWE-bench Pro figure"},
-  {n:"Kimi K3",          org:"Moonshot AI",      open:true,  pend:"Terminal-Bench 2.1 88.3 · wins DeepSWE and FrontierSWE · no ARC or SWE-bench Pro figure"},
+  {n:"Kimi K3",          org:"Moonshot AI",      open:true,  cin:3, cout:15,
+                                                 pend:"Terminal-Bench 2.1 88.3 · wins DeepSWE and FrontierSWE · no ARC or SWE-bench Pro figure"},
   {n:"Grok 4.7",         org:"xAI",              open:false, pend:"Artificial Analysis index 46 · no ARC, SWE-bench Pro or HLE figure published"}
 ];
 const blended = m => m.blend != null ? m.blend
@@ -805,7 +809,8 @@ function buildBench(){
   });
   const cell = m => COLS.map(c => m[c.k] == null
     ? `<td class="r">${DASH}</td>`
-    : `<td class="r"><span class="bcell"><span class="bbar${m.open?" t":""}"><i style="width:${(m[c.k]/max[c.k]*100).toFixed(0)}%"></i></span>${m[c.k]}${c.k==="hle"&&m.hleTools?`<abbr title="run with tools enabled">&dagger;</abbr>`:""}</span></td>`).join("");
+    : `<td class="r"><span class="bcell"><span class="bbar${m.open?" t":""}"><i style="width:${(m[c.k]/max[c.k]*100).toFixed(0)}%"></i></span>${m[c.k]}</span></td>`).join("");
+  const cost = m => { const b = blended(m); return b == null ? DASH : "$" + b.toFixed(2); };
   document.querySelector("#benchTab tbody").innerHTML = MODELS.map(m => {
     const tag = `<span class="wtag${m.open?" open":""}">${m.open?"open":"closed"}</span>`;
     const name = `<span class="m-name">${m.n}${m.fresh?`<span class="newtag">new</span>`:""}<span class="m-org">${m.org}</span></span>`;
@@ -813,14 +818,13 @@ function buildBench(){
          <td>${name}</td>
          <td>${tag}</td>
          <td class="r" colspan="4" style="text-align:center"><span class="pendtag">${m.pend}</span></td>
-         <td class="r">${DASH}</td>
+         <td class="r">${cost(m)}</td>
        </tr>`;
-    const b = blended(m);
     return `<tr${m.fresh?' class="fresh"':""}>
          <td>${name}</td>
          <td>${tag}</td>
          ${cell(m)}
-         <td class="r">${b == null ? DASH : "$" + b.toFixed(2)}</td>
+         <td class="r">${cost(m)}</td>
        </tr>`;
   }).join("");
 }
