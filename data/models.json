@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-21",
+  "as_of": "2026-09-23",
   "note": "Canonical model dataset for resources.html. null means the lab has published nothing this dataset could verify; \"unverified\": true means the model is announced but carries no scores on file. SOURCING CAVEAT: the primary leaderboards (arcprize.org, epoch.ai, artificialanalysis.ai, llm-stats.com) are blocked by the network egress policy of the environment that assembled this file, so figures were taken from public trackers reached through search rather than read off the source. Treat the ranking as reliable and the decimals as approximate; corrections via pull request, with a link to the primary result.",
   "benchmark_generation_note": "ARC-AGI-2 and SWE-bench Verified both saturated during 2026 — frontier models moved from the teens to 90+ on ARC-AGI-2, and above 95 per cent on SWE-bench Verified. ARC-AGI-3 (interactive) and SWE-bench Pro replaced them. GPQA Diamond was dropped from this table for the same reason, having topped out around 92. HLE now tracks the rolling edition, refreshed as questions fall.",
   "benchmarks": {
@@ -14,7 +14,8 @@
     "source": "https://artificialanalysis.ai/"
   },
   "models": [
-    { "name": "GPT-6 “Astra”", "org": "OpenAI", "weights": "closed", "arc2": 95, "arc3": 62.7, "swe": null, "hle": null, "cost_in": 10.0, "cost_out": 50.0 },
+    { "name": "Claude Opus 5.5", "org": "Anthropic", "weights": "closed", "released": "2026-09-22", "arc2": null, "arc3": null, "swe": 89.9, "hle": 67.7, "hle_with_tools": true, "cost_in": 4.0, "cost_out": 20.0, "note": "Leads SWE-bench Pro and HLE while pricing 20 per cent under Opus 5 on raw tokens; cache reads cut about 60 per cent to $0.20/M. Anthropic did not report SWE-bench Verified, GPQA Diamond or ARC results for it." },
+    { "name": "GPT-6 “Astra”", "org": "OpenAI", "weights": "closed", "released": "2026-09-03", "arc2": 95, "arc3": 62.7, "swe": null, "hle": null, "cost_in": 10.0, "cost_out": 50.0, "note": "Tops both ARC-AGI boards. No SWE-bench Pro figure published; reported 74 per cent +/-3 on Datacurve DeepSWE v1.1 and saturates FrontierMath Tier 4 at 98. Loses HLE to Claude Fable 5.1." },
     { "name": "Claude Fable 5.1", "org": "Anthropic", "weights": "closed", "arc2": null, "arc3": null, "swe": 81.2, "hle": 59.1, "cost_in": 10.0, "cost_out": 50.0 },
     { "name": "Claude Fable 5", "org": "Anthropic", "weights": "closed", "arc2": null, "arc3": null, "swe": 80.3, "hle": 55.5, "cost_in": 10.0, "cost_out": 50.0 },
     { "name": "Claude Mythos 5", "org": "Anthropic", "weights": "closed", "arc2": null, "arc3": null, "swe": 80.3, "hle": null, "cost_in": 10.0, "cost_out": 50.0 },
@@ -29,15 +30,17 @@
     { "name": "MiniMax M3", "org": "MiniMax", "weights": "open", "arc2": null, "arc3": null, "swe": 59.0, "hle": null, "blended": 1.10, "price_note": "cut from 1.20" },
     { "name": "Kimi K2.6", "org": "Moonshot AI", "weights": "open", "arc2": null, "arc3": null, "swe": 58.6, "hle": null, "cost_in": null, "cost_out": null },
     { "name": "DeepSeek V4 Pro-Max", "org": "DeepSeek", "weights": "open", "arc2": null, "arc3": null, "swe": null, "hle": null, "blended": 2.60, "price_note": "cut from 3.20" },
-    { "name": "DeepSeek V4 Flash", "org": "DeepSeek", "weights": "open", "arc2": null, "arc3": null, "swe": null, "hle": null, "cost_in": 0.44, "cost_out": 1.32 },
+    { "name": "DeepSeek V4 Flash-Max", "org": "DeepSeek", "weights": "open", "arc2": null, "arc3": null, "swe": null, "hle": null, "blended": 0.18, "price_note": "cut from 0.20. A separate V4 Flash tier is quoted around 0.14 cache-miss input / 0.28 output; the two tiers are easy to confuse, so check before relying on either." },
 
-    { "name": "GLM-5.3", "org": "Z.ai (Zhipu)", "weights": "open", "unverified": true, "note": "Released; no SWE-bench Pro score published by the vendor." },
-    { "name": "Kimi K3", "org": "Moonshot AI", "weights": "open", "unverified": true, "note": "Released; no SWE-bench Pro score published by the vendor." },
-    { "name": "Grok 4.7", "org": "xAI", "weights": "closed", "unverified": true, "note": "Announced. No benchmark results verified for this dataset." }
+    { "name": "GLM-5.3", "org": "Z.ai (Zhipu)", "weights": "open", "arc2": null, "arc3": null, "swe": null, "hle": null, "reports_elsewhere": "Terminal-Bench 2.1 88.2; leads open weights on the GDPval-AA v2 aggregate (1769); wins AutomationBench, HLE, PostTrainBench and SWE-Marathon in head-to-head coverage. No ARC or SWE-bench Pro figure found." },
+    { "name": "Kimi K3", "org": "Moonshot AI", "weights": "open", "arc2": null, "arc3": null, "swe": null, "hle": null, "reports_elsewhere": "Terminal-Bench 2.1 88.3; GDPval-AA v2 1682; wins DeepSWE 1.1, FrontierSWE, Program Bench, Terminal-Bench 2.1 and Toolathlon. Weights released on Hugging Face 27 July 2026. No ARC or SWE-bench Pro figure found." },
+    { "name": "Grok 4.7", "org": "xAI", "weights": "closed", "arc2": null, "arc3": null, "swe": null, "hle": null, "reports_elsewhere": "Artificial Analysis Intelligence Index 46. No ARC, SWE-bench Pro or HLE figure found; coverage refers more often to Grok 4.6 (about $2 in / $6 out)." }
   ],
+  "hle_note": "HLE figures mix runs with and without tools. Claude Opus 5.5's 67.7 is a tools-enabled figure and is not directly comparable to a no-tools number; treat the column as a ranking, not a measurement.",
   "context": {
     "swe_bench_verified_retired": "Frontier models cleared SWE-bench Verified above 95 per cent during 2026 (Claude Opus 5 around 96-97), clustering the leaders within a point. OpenAI stopped reporting Verified and now points to SWE-bench Pro.",
-    "open_weight_crossover": "Four open-weight models now clear the vendor SWE-bench Pro figure reported for GPT-5.5 (58.6), putting open weights roughly one generation, not one era, behind the closed frontier."
+    "open_weight_crossover": "Four open-weight models now clear the vendor SWE-bench Pro figure reported for GPT-5.5 (58.6), putting open weights roughly one generation, not one era, behind the closed frontier.",
+    "price_direction": "Capability per dollar is improving on both sides of the licence line. Opus 5.5 landed 10.7 points above Opus 5 on SWE-bench Pro at 20 per cent lower token prices, and open-weight prices fell across the board during 2026 (GLM-5.2 3.00 to 2.40, DeepSeek V4 Pro-Max 3.20 to 2.60, MiniMax M3 1.20 to 1.10)."
   },
   "training_compute": {
     "unit": "log10 FLOP, order-of-magnitude public estimate",
